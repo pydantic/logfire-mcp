@@ -1,0 +1,11 @@
+services:
+  logfire-mcp:
+    build: .
+    volumes:
+      - ./main.py:/app/main.py
+    ports:
+      - "8005:8005"
+    environment:
+      - LOGFIRE_READ_TOKEN
+    # For development, restart on failure
+    restart: unless-stopped
