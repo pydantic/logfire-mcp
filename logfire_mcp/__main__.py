@@ -9,12 +9,9 @@ from datetime import UTC, datetime, timedelta
 from textwrap import indent
 from typing import Annotated, Any, Literal, TypedDict, cast
 
-import logfire
 from logfire.experimental.query_client import AsyncLogfireQueryClient
 from mcp.server.fastmcp import Context, FastMCP
 from pydantic import BaseModel, Field
-
-logfire.configure(send_to_logfire="if-token-present")
 
 HOUR = 60  # minutes
 DAY = 24 * HOUR
@@ -39,7 +36,7 @@ async def lifespan(server: FastMCP) -> AsyncIterator[MCPState]:
         yield MCPState(logfire_client=client)
 
 
-mcp = FastMCP("Logfire", lifespan=lifespan, port=8005)
+mcp = FastMCP("Logfire", lifespan=lifespan)
 
 
 class ExceptionCount(BaseModel):
@@ -185,5 +182,9 @@ And for `otel_resource_attributes`:
     return schema_description
 
 
+def main():
+    mcp.run(transport="stdio")
+
+
 if __name__ == "__main__":
-    mcp.run(transport="sse")
+    main()

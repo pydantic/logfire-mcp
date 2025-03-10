@@ -211,7 +211,7 @@ wheels = [
 [[package]]
 name = "logfire-mcp"
 version = "0.0.1"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "logfire" },
     { name = "mcp", extra = ["cli"] },
