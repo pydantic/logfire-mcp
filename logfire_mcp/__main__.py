@@ -1,5 +1,4 @@
-from __future__ import annotations as _annotations
-
+import argparse
 import os
 import re
 from collections.abc import AsyncIterator
@@ -16,27 +15,10 @@ from pydantic import BaseModel, Field
 HOUR = 60  # minutes
 DAY = 24 * HOUR
 
-# Create your Logfire read token at
-# https://logfire.pydantic.dev/-/redirect/latest-project/settings/read-tokens
-logfire_read_token = os.getenv("LOGFIRE_READ_TOKEN")
-if logfire_read_token is None:
-    raise ValueError("LOGFIRE_READ_TOKEN is not set")
-logfire_base_url = os.getenv("LOGFIRE_BASE_URL", "https://logfire-api.pydantic.dev")
-
 
 @dataclass
 class MCPState:
     logfire_client: AsyncLogfireQueryClient
-
-
-@asynccontextmanager
-async def lifespan(server: FastMCP) -> AsyncIterator[MCPState]:
-    assert logfire_read_token is not None
-    async with AsyncLogfireQueryClient(read_token=logfire_read_token, base_url=logfire_base_url) as client:
-        yield MCPState(logfire_client=client)
-
-
-mcp = FastMCP("Logfire", lifespan=lifespan)
 
 
 class ExceptionCount(BaseModel):
@@ -44,7 +26,6 @@ class ExceptionCount(BaseModel):
     count: int
 
 
-@mcp.tool()
 async def find_exceptions(ctx: Context, age: Annotated[int, Field(lt=7 * DAY)]) -> list[ExceptionCount]:
     """Get the exceptions on a file.
 
@@ -67,7 +48,6 @@ async def find_exceptions(ctx: Context, age: Annotated[int, Field(lt=7 * DAY)]) 
     return [ExceptionCount(**row) for row in result["rows"]]
 
 
-@mcp.tool(name="find_exceptions_in_file")
 async def find_exceptions_in_file(ctx: Context, filepath: str, age: Annotated[int, Field(lt=7 * DAY)]) -> list[Any]:
     """Get the details about the 10 most recent exceptions on the file.
 
@@ -98,7 +78,6 @@ async def find_exceptions_in_file(ctx: Context, filepath: str, age: Annotated[in
     return result["rows"]
 
 
-@mcp.tool()
 async def arbitrary_query(ctx: Context, query: str, age: Annotated[int, Field(lt=7 * DAY)]) -> list[Any]:
     """Run an arbitrary query on the Logfire database.
 
@@ -114,7 +93,6 @@ async def arbitrary_query(ctx: Context, query: str, age: Annotated[int, Field(lt
     return result["rows"]
 
 
-@mcp.tool()
 async def get_logfire_records_schema(ctx: Context) -> str:
     """Get the records schema from Logfire.
 
@@ -182,8 +160,51 @@ And for `otel_resource_attributes`:
     return schema_description
 
 
+def app_factory(logfire_read_token: str, logfire_base_url: str) -> FastMCP:
+    @asynccontextmanager
+    async def lifespan(server: FastMCP) -> AsyncIterator[MCPState]:
+        async with AsyncLogfireQueryClient(read_token=logfire_read_token, base_url=logfire_base_url) as client:
+            yield MCPState(logfire_client=client)
+
+    mcp = FastMCP("Logfire", lifespan=lifespan)
+    mcp.tool()(find_exceptions)
+    mcp.tool()(find_exceptions_in_file)
+    mcp.tool()(arbitrary_query)
+    mcp.tool()(get_logfire_records_schema)
+
+    return mcp
+
+
 def main():
-    mcp.run(transport="stdio")
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--logfire-read-token",
+        type=str,
+        required=False,
+        help="Logfire read token. Can also be set via LOGFIRE_READ_TOKEN environment variable.",
+    )
+    parser.add_argument(
+        "--logfire-base-url",
+        type=str,
+        required=False,
+        help="Logfire base URL. Can also be set via LOGFIRE_BASE_URL environment variable. "
+        "Defaults to https://logfire-api.pydantic.dev",
+    )
+    args = parser.parse_args()
+
+    # Get token from args or environment
+    logfire_read_token = args.logfire_read_token or os.getenv("LOGFIRE_READ_TOKEN")
+    if not logfire_read_token:
+        parser.error(
+            "Logfire read token must be provided either via --logfire-read-token argument "
+            "or LOGFIRE_READ_TOKEN environment variable"
+        )
+
+    # Get base URL from args, environment, or default
+    logfire_base_url = args.logfire_base_url or os.getenv("LOGFIRE_BASE_URL") or "https://logfire-api.pydantic.dev"
+
+    app = app_factory(logfire_read_token, logfire_base_url)
+    app.run(transport="stdio")
 
 
 if __name__ == "__main__":
