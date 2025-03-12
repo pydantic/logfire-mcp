@@ -10,7 +10,7 @@ from typing import Annotated, Any, Literal, TypedDict, cast
 
 from logfire.experimental.query_client import AsyncLogfireQueryClient
 from mcp.server.fastmcp import Context, FastMCP
-from pydantic import BaseModel, Field
+from pydantic import AfterValidator, BaseModel
 
 HOUR = 60  # minutes
 DAY = 24 * HOUR
@@ -26,7 +26,20 @@ class ExceptionCount(BaseModel):
     count: int
 
 
-async def find_exceptions(ctx: Context, age: Annotated[int, Field(lt=7 * DAY)]) -> list[ExceptionCount]:
+def validate_age(age: int) -> int:
+    """Validate that the age is within acceptable bounds (positive and <= 7 days)."""
+    if age <= 0:
+        raise ValueError("Age must be positive")
+    if age > 7 * DAY:
+        raise ValueError("Age cannot be more than 7 days")
+    return age
+
+
+ValidatedAge = Annotated[int, AfterValidator(validate_age)]
+"""We don't want to add exclusiveMaximum on the schema because it fails with some models."""
+
+
+async def find_exceptions(ctx: Context, age: ValidatedAge) -> list[ExceptionCount]:
     """Get the exceptions on a file.
 
     Args:
@@ -48,7 +61,7 @@ async def find_exceptions(ctx: Context, age: Annotated[int, Field(lt=7 * DAY)]) 
     return [ExceptionCount(**row) for row in result["rows"]]
 
 
-async def find_exceptions_in_file(ctx: Context, filepath: str, age: Annotated[int, Field(lt=7 * DAY)]) -> list[Any]:
+async def find_exceptions_in_file(ctx: Context, filepath: str, age: ValidatedAge) -> list[Any]:
     """Get the details about the 10 most recent exceptions on the file.
 
     Args:
@@ -78,7 +91,7 @@ async def find_exceptions_in_file(ctx: Context, filepath: str, age: Annotated[in
     return result["rows"]
 
 
-async def arbitrary_query(ctx: Context, query: str, age: Annotated[int, Field(lt=7 * DAY)]) -> list[Any]:
+async def arbitrary_query(ctx: Context, query: str, age: ValidatedAge) -> list[Any]:
     """Run an arbitrary query on the Logfire database.
 
     The schema is available via the `get_logfire_records_schema` tool.
