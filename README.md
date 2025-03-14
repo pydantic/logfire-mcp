@@ -23,26 +23,21 @@ custom queries using Logfire's OpenTelemetry-native API, with automatic token-ba
 * `get_logfire_records_schema` - Get the OpenTelemetry schema to help with custom queries
   * No required arguments
 
-## Installation
+## Usage
 
-### Using pip (recommended)
+First, you need a Logfire read token. You can create one at:
+https://logfire.pydantic.dev/-/redirect/latest-project/settings/read-tokens
 
-Install `logfire-mcp` via pip:
+Then you can run the MCP server using `uvx`:
 
 ```bash
-pip install logfire-mcp
+LOGFIRE_READ_TOKEN=YOUR_TOKEN uvx logfire-mcp
 ```
 
-After installation, you can run it directly using:
+Or using the `--read-token` flag:
 
 ```bash
-logfire-mcp --read-token YOUR_TOKEN
-```
-
-Or using environment variables:
-
-```bash
-LOGFIRE_READ_TOKEN=YOUR_TOKEN logfire-mcp
+uvx logfire-mcp --read-token=YOUR_TOKEN
 ```
 
 ## Configuration
@@ -55,12 +50,14 @@ Create a `.cursor/mcp.json` file in your project root:
 {
   "mcpServers": {
     "logfire": {
-      "command": "logfire-mcp",
-      "args": ["--read-token=YOUR-TOKEN"]
+      "command": "uvx",
+      "args": ["logfire-mcp", "--read-token=YOUR-TOKEN"]
     }
   }
 }
 ```
+
+The Cursor doesn't accept the `env` field, so you need to use the `--read-token` flag instead.
 
 ### Configure for Claude Desktop
 
@@ -68,7 +65,8 @@ Add to your Claude settings:
 
 ```json
 {
-  "command": ["logfire-mcp"],
+  "command": ["uvx"],
+  "args": ["logfire-mcp"],
   "type": "stdio",
   "env": {
     "LOGFIRE_READ_TOKEN": "YOUR_TOKEN"
@@ -84,7 +82,8 @@ Add to your Cline settings in `cline_mcp_settings.json`:
 {
   "mcpServers": {
     "logfire": {
-      "command": "logfire-mcp",
+      "command": "uvx",
+      "args": ["logfire-mcp"],
       "env": {
         "LOGFIRE_READ_TOKEN": "YOUR_TOKEN"
       },
@@ -101,12 +100,12 @@ By default, the server connects to the Logfire API at `https://logfire-api.pydan
 
 1. Using the `--base-url` argument:
 ```bash
-logfire-mcp --base-url=https://your-logfire-instance.com
+uvx logfire-mcp --base-url=https://your-logfire-instance.com
 ```
 
 2. Setting the environment variable:
 ```bash
-LOGFIRE_BASE_URL=https://your-logfire-instance.com logfire-mcp
+LOGFIRE_BASE_URL=https://your-logfire-instance.com uvx logfire-mcp
 ```
 
 ## Example Interactions
@@ -190,9 +189,9 @@ Response:
 1. First, obtain a Logfire read token from:
    https://logfire.pydantic.dev/-/redirect/latest-project/settings/read-tokens
 
-2. Install the package:
+2. Run the MCP server:
    ```bash
-   pip install logfire-mcp
+   uvx logfire-mcp --read-token=YOUR_TOKEN
    ```
 
 3. Configure your preferred client (Cursor, Claude Desktop, or Cline) using the configuration examples above
