@@ -1,25 +1,31 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "uv-dynamic-versioning"]
 build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "uv-dynamic-versioning"
+
+[tool.uv-dynamic-versioning]
+vcs = "git"
+style = "pep440"
+bump = true
 
 [project]
 name = "logfire-mcp"
-version = "0.0.7"
+dynamic = ["version"]
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "logfire>=3.7.1",
-    "mcp[cli]>=1.3.0",
+    "mcp[cli]>=1.4.1"
 ]
 
 [project.scripts]
 logfire-mcp = "logfire_mcp.__main__:main"
 
 [dependency-groups]
-dev = [
-    "ruff",
-]
+dev = ["ruff"]
 
 [tool.ruff]
 line-length = 120

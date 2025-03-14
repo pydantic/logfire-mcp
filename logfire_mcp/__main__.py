@@ -191,13 +191,13 @@ def app_factory(logfire_read_token: str, logfire_base_url: str) -> FastMCP:
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--logfire-read-token",
+        "--read-token",
         type=str,
         required=False,
         help="Logfire read token. Can also be set via LOGFIRE_READ_TOKEN environment variable.",
     )
     parser.add_argument(
-        "--logfire-base-url",
+        "--base-url",
         type=str,
         required=False,
         help="Logfire base URL. Can also be set via LOGFIRE_BASE_URL environment variable. "
@@ -206,15 +206,15 @@ def main():
     args = parser.parse_args()
 
     # Get token from args or environment
-    logfire_read_token = args.logfire_read_token or os.getenv("LOGFIRE_READ_TOKEN")
+    logfire_read_token = args.read_token or os.getenv("LOGFIRE_READ_TOKEN")
     if not logfire_read_token:
         parser.error(
-            "Logfire read token must be provided either via --logfire-read-token argument "
+            "Logfire read token must be provided either via --read-token argument "
             "or LOGFIRE_READ_TOKEN environment variable"
         )
 
     # Get base URL from args, environment, or default
-    logfire_base_url = args.logfire_base_url or os.getenv("LOGFIRE_BASE_URL") or "https://logfire-api.pydantic.dev"
+    logfire_base_url = args.base_url or os.getenv("LOGFIRE_BASE_URL") or "https://logfire-api.pydantic.dev"
 
     app = app_factory(logfire_read_token, logfire_base_url)
     app.run(transport="stdio")
