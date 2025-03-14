@@ -13,7 +13,7 @@ bump = true
 [project]
 name = "logfire-mcp"
 dynamic = ["version"]
-description = "Add your description here"
+description = "The Logfire MCP server! 🔍"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
