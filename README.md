@@ -1,24 +1,26 @@
 # Logfire MCP Server
 
-A Model Context Protocol server that provides access to Logfire logs and exceptions. This server enables LLMs to query your application logs, find exceptions, and perform custom queries using Logfire's query API, with automatic token-based authentication.
+A Model Context Protocol server that provides access to OpenTelemetry traces and metrics through Logfire.
+This server enables LLMs to query your application's telemetry data, analyze distributed traces, and perform
+custom queries using Logfire's OpenTelemetry-native API, with automatic token-based authentication.
 
 ## Available Tools
 
-* `find_exceptions` - Get exception counts grouped by file
+* `find_exceptions` - Get exception counts from traces grouped by file
   * Required arguments:
     * `age` (int): Number of minutes to look back (e.g., 30 for last 30 minutes, max 7 days)
 
-* `find_exceptions_in_file` - Get detailed information about exceptions in a specific file
+* `find_exceptions_in_file` - Get detailed trace information about exceptions in a specific file
   * Required arguments:
     * `filepath` (string): Path to the file to analyze
     * `age` (int): Number of minutes to look back (max 7 days)
 
-* `arbitrary_query` - Run custom SQL queries on your logs
+* `arbitrary_query` - Run custom SQL queries on your OpenTelemetry traces and metrics
   * Required arguments:
     * `query` (string): SQL query to execute
     * `age` (int): Number of minutes to look back (max 7 days)
 
-* `get_logfire_records_schema` - Get the database schema to help with custom queries
+* `get_logfire_records_schema` - Get the OpenTelemetry schema to help with custom queries
   * No required arguments
 
 ## Installation
@@ -109,7 +111,7 @@ LOGFIRE_BASE_URL=https://your-logfire-instance.com logfire-mcp
 
 ## Example Interactions
 
-1. Find all exceptions in the last hour:
+1. Find all exceptions in traces from the last hour:
 ```json
 {
   "name": "find_exceptions",
@@ -133,7 +135,7 @@ Response:
 ]
 ```
 
-2. Get details about exceptions in a specific file:
+2. Get details about exceptions from traces in a specific file:
 ```json
 {
   "name": "find_exceptions_in_file",
@@ -153,17 +155,22 @@ Response:
     "exception_type": "ValueError",
     "exception_message": "Invalid input format",
     "function_name": "process_request",
-    "line_number": "42"
+    "line_number": "42",
+    "attributes": {
+      "service.name": "api-service",
+      "code.filepath": "app/api.py"
+    },
+    "trace_id": "1234567890abcdef"
   }
 ]
 ```
 
-3. Run a custom query:
+3. Run a custom query on traces:
 ```json
 {
   "name": "arbitrary_query",
   "arguments": {
-    "query": "SELECT message, created_at FROM records WHERE level = 'ERROR' ORDER BY created_at DESC LIMIT 10",
+    "query": "SELECT trace_id, message, created_at, attributes->>'service.name' as service FROM records WHERE severity_text = 'ERROR' ORDER BY created_at DESC LIMIT 10",
     "age": 1440
   }
 }
@@ -171,12 +178,12 @@ Response:
 
 ## Examples of Questions for Claude
 
-1. "What exceptions occurred in the last hour?"
-2. "Show me the recent errors in the file 'app/api.py'"
-3. "How many error logs were there in the last 24 hours?"
-4. "What are the most common exception types in my application?"
-5. "Get me the schema of the logs database"
-6. "Run a query to find all critical errors from yesterday"
+1. "What exceptions occurred in traces from the last hour across all services?"
+2. "Show me the recent errors in the file 'app/api.py' with their trace context"
+3. "How many errors were there in the last 24 hours per service?"
+4. "What are the most common exception types in my traces, grouped by service name?"
+5. "Get me the OpenTelemetry schema for traces and metrics"
+6. "Find all errors from yesterday and show their trace contexts"
 
 ## Getting Started
 
@@ -190,11 +197,11 @@ Response:
 
 3. Configure your preferred client (Cursor, Claude Desktop, or Cline) using the configuration examples above
 
-4. Start using the MCP server to analyze your logs and exceptions!
+4. Start using the MCP server to analyze your OpenTelemetry traces and metrics!
 
 ## Contributing
 
-We welcome contributions to help improve the Logfire MCP server. Whether you want to add new log analysis tools, enhance existing functionality, or improve documentation, your input is valuable.
+We welcome contributions to help improve the Logfire MCP server. Whether you want to add new trace analysis tools, enhance metrics querying functionality, or improve documentation, your input is valuable.
 
 For examples of other MCP servers and implementation patterns, see the [Model Context Protocol servers repository](https://github.com/modelcontextprotocol/servers).
 
