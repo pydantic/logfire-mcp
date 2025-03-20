@@ -35,11 +35,13 @@ For installation instructions, see the [`uv` installation docs](https://docs.ast
 If you already have an older version of `uv` installed, you might need to update it with `uv self update`.
 
 ### Obtain a Logfire read token
-In order to make requests to the Logfire APIs, the Logfire MCP server requires a "read token". You can create one at:
+In order to make requests to the Logfire APIs, the Logfire MCP server requires a "read token".
+
+You can create one under the "Read Tokens" section of your project settings in Logfire:
 https://logfire.pydantic.dev/-/redirect/latest-project/settings/read-tokens
 
 > [!IMPORTANT]
-> Logfire read tokens are project-specific, so you need to create one for the specific project you want to expose to the MCP server.
+> Logfire read tokens are project-specific, so you need to create one for the specific project you want to expose to the Logfire MCP server.
 
 ### Manually run the server
 Once you have `uv` installed and have a Logfire read token, you can manually run the MCP server using `uvx` (which is provided by `uv`).
@@ -56,8 +58,8 @@ or using the `--read-token` flag:
 uvx logfire-mcp --read-token=YOUR_READ_TOKEN
 ```
 > [!NOTE]  
-> If you are using Cursor, Claude Desktop, Cline, or other MCP clients that manage your MCP servers for you, you will
-    not need to manually run the server yourself. The next section will show you how to configure these clients to make 
+> If you are using Cursor, Claude Desktop, Cline, or other MCP clients that manage your MCP servers for you, you **_do
+    NOT_** need to manually run the server yourself. The next section will show you how to configure these clients to make 
     use of the Logfire MCP server.
 
 ## Configuration with well-known MCP clients
