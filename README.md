@@ -26,27 +26,27 @@ traces, and make use of the results of arbitrary SQL queries executed using the 
   * No required arguments
 
 ## Setup
-### Prerequisites
-#### `uv`
+### Install `uv`
+
 The first thing to do is make sure `uv` is installed, as `uv` is used to run the MCP server.
 
 For installation instructions, see the [`uv` installation docs](https://docs.astral.sh/uv/getting-started/installation/).
 
 Note, if you already have an old version installed, you might need to update it with `uv self update`.
 
-#### Logfire Read Token
+### Obtain a Logfire read token
 In order to make requests to the Logfire APIs, the Logfire MCP server requires a "read token". You can create one at:
 https://logfire.pydantic.dev/-/redirect/latest-project/settings/read-tokens
 
 Note — Logfire read tokens are project-specific, so you need to create one for the specific project you want to expose to the MCP server.
 
-### Running the server
+### Manually run the server
 Once you have `uv` installed and have a Logfire read token, you can manually run the MCP server using `uvx` (which is provided by `uv`).
 
-!!! note
-    If you are using Cursor, Claude Desktop, Cline, or other MCP clients that manage your MCP servers for you, you will
-    not need to manually run the server yourself. The [Configuration](#configuration) section below shows you how to
-    configure some common clients to use the Logfire MCP server.
+> [!NOTE]  
+> If you are using Cursor, Claude Desktop, Cline, or other MCP clients that manage your MCP servers for you, you will
+    not need to manually run the server yourself. The [Configuration](#configuration-with-well-known-mcp-clients)
+    section below shows you how to configure these clients to make use of the Logfire MCP server.
 
 You can specify your read token using the `LOGFIRE_READ_TOKEN` environment variable:
 
@@ -60,7 +60,7 @@ or using the `--read-token` flag:
 uvx logfire-mcp --read-token=YOUR_READ_TOKEN
 ```
 
-## Configuration
+## Configuration with well-known MCP clients
 
 ### Configure for Cursor
 
