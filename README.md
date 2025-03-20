@@ -1,8 +1,10 @@
 # Logfire MCP Server
 
-A Model Context Protocol server that provides access to OpenTelemetry traces and metrics through Logfire.
-This server enables LLMs to query your application's telemetry data, analyze distributed traces, and perform
-custom queries using Logfire's OpenTelemetry-native API, with automatic token-based authentication.
+This repository contains a Model Context Protocol (MCP) server with tools that can access the OpenTelemetry traces and
+metrics you've sent to Logfire.
+
+This MCP server enables LLMs to retrieve your application's telemetry data, analyze distributed
+traces, and make use of the results of arbitrary SQL queries executed using the Logfire APIs.
 
 ## Available Tools
 
@@ -23,21 +25,39 @@ custom queries using Logfire's OpenTelemetry-native API, with automatic token-ba
 * `get_logfire_records_schema` - Get the OpenTelemetry schema to help with custom queries
   * No required arguments
 
-## Usage
+## Setup
+### Prerequisites
+#### `uv`
+The first thing to do is make sure `uv` is installed, as `uv` is used to run the MCP server.
 
-First, you need a Logfire read token. You can create one at:
+For installation instructions, see the [`uv` installation docs](https://docs.astral.sh/uv/getting-started/installation/).
+
+Note, if you already have an old version installed, you might need to update it with `uv self update`.
+
+#### Logfire Read Token
+In order to make requests to the Logfire APIs, the Logfire MCP server requires a "read token". You can create one at:
 https://logfire.pydantic.dev/-/redirect/latest-project/settings/read-tokens
 
-Then you can run the MCP server using `uvx`:
+Note — Logfire read tokens are project-specific, so you need to create one for the specific project you want to expose to the MCP server.
+
+### Running the server
+Once you have `uv` installed and have a Logfire read token, you can manually run the MCP server using `uvx` (which is provided by `uv`).
+
+!!! note
+    If you are using Cursor, Claude Desktop, Cline, or other MCP clients that manage your MCP servers for you, you will
+    not need to manually run the server yourself. The [Configuration](#configuration) section below shows you how to
+    configure some common clients to use the Logfire MCP server.
+
+You can specify your read token using the `LOGFIRE_READ_TOKEN` environment variable:
 
 ```bash
-LOGFIRE_READ_TOKEN=YOUR_TOKEN uvx logfire-mcp
+LOGFIRE_READ_TOKEN=YOUR_READ_TOKEN uvx logfire-mcp
 ```
 
-Or using the `--read-token` flag:
+or using the `--read-token` flag:
 
 ```bash
-uvx logfire-mcp --read-token=YOUR_TOKEN
+uvx logfire-mcp --read-token=YOUR_READ_TOKEN
 ```
 
 ## Configuration
