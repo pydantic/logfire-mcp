@@ -5,6 +5,7 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
+from importlib.metadata import version
 from textwrap import indent
 from typing import Annotated, Any, Literal, TypedDict, cast
 
@@ -14,6 +15,8 @@ from pydantic import AfterValidator, BaseModel
 
 HOUR = 60  # minutes
 DAY = 24 * HOUR
+
+__version__ = version("logfire-mcp")
 
 
 @dataclass
@@ -177,7 +180,9 @@ def app_factory(logfire_read_token: str, logfire_base_url: str) -> FastMCP:
     @asynccontextmanager
     async def lifespan(server: FastMCP) -> AsyncIterator[MCPState]:
         async with AsyncLogfireQueryClient(
-            read_token=logfire_read_token, base_url=logfire_base_url, headers={"User-Agent": "logfire-mcp/0.1.0"}
+            read_token=logfire_read_token,
+            base_url=logfire_base_url,
+            headers={"User-Agent": f"logfire-mcp/{__version__}"},
         ) as client:
             yield MCPState(logfire_client=client)
 
