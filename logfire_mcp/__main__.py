@@ -179,11 +179,7 @@ And for `otel_resource_attributes`:
 def app_factory(logfire_read_token: str, logfire_base_url: str) -> FastMCP:
     @asynccontextmanager
     async def lifespan(server: FastMCP) -> AsyncIterator[MCPState]:
-        async with AsyncLogfireQueryClient(
-            read_token=logfire_read_token,
-            base_url=logfire_base_url,
-            headers={"User-Agent": f"logfire-mcp/{__version__}"},
-        ) as client:
+        async with AsyncLogfireQueryClient(read_token=logfire_read_token, base_url=logfire_base_url) as client:
             yield MCPState(logfire_client=client)
 
     mcp = FastMCP("Logfire", lifespan=lifespan)
