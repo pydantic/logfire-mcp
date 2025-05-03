@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/pydantic-logfire-mcp-badge.png)](https://mseep.ai/app/pydantic-logfire-mcp)
+
 # Logfire MCP Server
 
 This repository contains a Model Context Protocol (MCP) server with tools that can access the OpenTelemetry traces and
