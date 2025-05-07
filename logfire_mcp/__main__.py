@@ -11,6 +11,7 @@ from typing import Annotated, Any, Literal, TypedDict, cast
 
 from logfire.experimental.query_client import AsyncLogfireQueryClient
 from mcp.server.fastmcp import Context, FastMCP
+from mcp.server.session import ServerSession
 from pydantic import AfterValidator, BaseModel
 
 HOUR = 60  # minutes
@@ -42,15 +43,15 @@ ValidatedAge = Annotated[int, AfterValidator(validate_age)]
 """We don't want to add exclusiveMaximum on the schema because it fails with some models."""
 
 
-async def find_exceptions(ctx: Context, age: ValidatedAge) -> list[ExceptionCount]:
+async def find_exceptions(ctx: Context[ServerSession, MCPState], age: ValidatedAge) -> list[ExceptionCount]:
     """Get the exceptions on a file.
 
     Args:
         age: Number of minutes to look back, e.g. 30 for last 30 minutes. Maximum allowed value is 7 days.
     """
-    state = cast(MCPState, ctx.request_context.lifespan_context)
+    logfire_client = ctx.request_context.lifespan_context.logfire_client
     min_timestamp = datetime.now(UTC) - timedelta(minutes=age)
-    result = await state.logfire_client.query_json_rows(
+    result = await logfire_client.query_json_rows(
         """\
         SELECT attributes->>'code.filepath' as filepath, count(*) as count
         FROM records
@@ -64,16 +65,16 @@ async def find_exceptions(ctx: Context, age: ValidatedAge) -> list[ExceptionCoun
     return [ExceptionCount(**row) for row in result["rows"]]
 
 
-async def find_exceptions_in_file(ctx: Context, filepath: str, age: ValidatedAge) -> list[Any]:
+async def find_exceptions_in_file(ctx: Context[ServerSession, MCPState], filepath: str, age: ValidatedAge) -> list[Any]:
     """Get the details about the 10 most recent exceptions on the file.
 
     Args:
         filepath: The path to the file to find exceptions in.
         age: Number of minutes to look back, e.g. 30 for last 30 minutes. Maximum allowed value is 7 days.
     """
-    state = cast(MCPState, ctx.request_context.lifespan_context)
+    logfire_client = ctx.request_context.lifespan_context.logfire_client
     min_timestamp = datetime.now(UTC) - timedelta(minutes=age)
-    result = await state.logfire_client.query_json_rows(
+    result = await logfire_client.query_json_rows(
         f"""\
         SELECT
             created_at,
@@ -94,7 +95,7 @@ async def find_exceptions_in_file(ctx: Context, filepath: str, age: ValidatedAge
     return result["rows"]
 
 
-async def arbitrary_query(ctx: Context, query: str, age: ValidatedAge) -> list[Any]:
+async def arbitrary_query(ctx: Context[ServerSession, MCPState], query: str, age: ValidatedAge) -> list[Any]:
     """Run an arbitrary query on the Logfire database.
 
     The schema is available via the `get_logfire_records_schema` tool.
@@ -103,19 +104,19 @@ async def arbitrary_query(ctx: Context, query: str, age: ValidatedAge) -> list[A
         query: The query to run, as a SQL string.
         age: Number of minutes to look back, e.g. 30 for last 30 minutes. Maximum allowed value is 7 days.
     """
-    state = cast(MCPState, ctx.request_context.lifespan_context)
+    logfire_client = ctx.request_context.lifespan_context.logfire_client
     min_timestamp = datetime.now(UTC) - timedelta(minutes=age)
-    result = await state.logfire_client.query_json_rows(query, min_timestamp=min_timestamp)
+    result = await logfire_client.query_json_rows(query, min_timestamp=min_timestamp)
     return result["rows"]
 
 
-async def get_logfire_records_schema(ctx: Context) -> str:
+async def get_logfire_records_schema(ctx: Context[ServerSession, MCPState]) -> str:
     """Get the records schema from Logfire.
 
     To perform the `arbitrary_query` tool, you can use the `schema://records` to understand the schema.
     """
-    state = cast(MCPState, ctx.request_context.lifespan_context)
-    result = await state.logfire_client.query_json_rows("SHOW COLUMNS FROM records")
+    logfire_client = ctx.request_context.lifespan_context.logfire_client
+    result = await logfire_client.query_json_rows("SHOW COLUMNS FROM records")
     return build_schema_description(cast(list[SchemaRow], result["rows"]))
 
 
@@ -179,7 +180,8 @@ And for `otel_resource_attributes`:
 def app_factory(logfire_read_token: str, logfire_base_url: str) -> FastMCP:
     @asynccontextmanager
     async def lifespan(server: FastMCP) -> AsyncIterator[MCPState]:
-        async with AsyncLogfireQueryClient(read_token=logfire_read_token, base_url=logfire_base_url) as client:
+        headers = {"User-Agent": f"logfire-mcp/{__version__}"}
+        async with AsyncLogfireQueryClient(logfire_read_token, logfire_base_url, headers=headers) as client:
             yield MCPState(logfire_client=client)
 
     mcp = FastMCP("Logfire", lifespan=lifespan)
