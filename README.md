@@ -3,6 +3,10 @@
 This repository contains a Model Context Protocol (MCP) server with tools that can access the OpenTelemetry traces and
 metrics you've sent to Logfire.
 
+<a href="https://glama.ai/mcp/servers/@pydantic/logfire-mcp">
+  <img width="380" height="200" src="https://glama.ai/mcp/servers/@pydantic/logfire-mcp/badge" alt="Logfire Server MCP server" />
+</a>
+
 This MCP server enables LLMs to retrieve your application's telemetry data, analyze distributed
 traces, and make use of the results of arbitrary SQL queries executed using the Logfire APIs.
 
