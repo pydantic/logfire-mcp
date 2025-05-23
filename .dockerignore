@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+.venv
+.env
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Development
+# .git/ is needed for dynamic versioning
+.gitignore
+.github/
+.ruff_cache/
+.pytest_cache/
+.coverage
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Project specific
+CLAUDE.md
+.cursor/
