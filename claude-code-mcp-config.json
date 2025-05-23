@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "logfire-docker": {
+      "command": "docker",
+      "args": [
+        "run", 
+        "-i", 
+        "--rm",
+        "-e", "DOCKER_CONTAINER=true",
+        "-e", "LOGFIRE_READ_TOKEN=your_logfire_read_token",
+        "mcp/logfire:latest"
+      ],
+      "description": "Logfire MCP server for accessing OpenTelemetry traces and metrics"
+    }
+  }
+}
