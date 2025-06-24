@@ -206,7 +206,7 @@ def main():
         type=str,
         required=False,
         help="Logfire base URL. Can also be set via LOGFIRE_BASE_URL environment variable. "
-        "Defaults to https://logfire-api.pydantic.dev",
+        "Defaults to https://api-us.pydantic.dev",
     )
     args = parser.parse_args()
 
@@ -219,7 +219,7 @@ def main():
         )
 
     # Get base URL from args, environment, or default
-    logfire_base_url = args.base_url or os.getenv("LOGFIRE_BASE_URL") or "https://logfire-api.pydantic.dev"
+    logfire_base_url = args.base_url or os.getenv("LOGFIRE_BASE_URL") or "https://api-us.pydantic.dev"
 
     app = app_factory(logfire_read_token, logfire_base_url)
     app.run(transport="stdio")
