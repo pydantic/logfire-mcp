@@ -115,6 +115,27 @@ Add to your Cline settings in `cline_mcp_settings.json`:
   }
 }
 ```
+### Configure for VS Code
+
+Make sure you [enabled MCP support in VS Code](https://code.visualstudio.com/docs/copilot/chat/mcp-servers#_enable-mcp-support-in-vs-code).
+
+Create a `.vscode/mcp.json` file in your project's root directory:
+
+```json
+{
+    "servers": {
+        "logfire": {
+            "type": "stdio",
+            "command": "uvx", // or the absolute /path/to/uvx
+            "args": ["logfire-mcp@latest"],
+            "env": {
+                "LOGFIRE_READ_TOKEN": "YOUR-READ-TOKEN",
+                "LOGFIRE_BASE_URL": "https://logfire-eu.pydantic.dev" // choose the correct base url
+            }
+        }
+    }
+}
+```
 
 ### Customization - Base URL
 
