@@ -12,10 +12,6 @@ traces, and make use of the results of arbitrary SQL queries executed using the 
 
 ## Available Tools
 
-* `find_exceptions` - Get exception counts from traces grouped by file
-  * Required arguments:
-    * `age` (int): Number of minutes to look back (e.g., 30 for last 30 minutes, max 7 days)
-
 * `find_exceptions_in_file` - Get detailed trace information about exceptions in a specific file
   * Required arguments:
     * `filepath` (string): Path to the file to analyze
@@ -53,17 +49,17 @@ Once you have `uv` installed and have a Logfire read token, you can manually run
 You can specify your read token using the `LOGFIRE_READ_TOKEN` environment variable:
 
 ```bash
-LOGFIRE_READ_TOKEN=YOUR_READ_TOKEN uvx logfire-mcp
+LOGFIRE_READ_TOKEN=YOUR_READ_TOKEN uvx logfire-mcp@latest
 ```
 
 or using the `--read-token` flag:
 
 ```bash
-uvx logfire-mcp --read-token=YOUR_READ_TOKEN
+uvx logfire-mcp@latest --read-token=YOUR_READ_TOKEN
 ```
-> [!NOTE]  
+> [!NOTE]
 > If you are using Cursor, Claude Desktop, Cline, or other MCP clients that manage your MCP servers for you, you **_do
-    NOT_** need to manually run the server yourself. The next section will show you how to configure these clients to make 
+    NOT_** need to manually run the server yourself. The next section will show you how to configure these clients to make
     use of the Logfire MCP server.
 
 ## Configuration with well-known MCP clients
@@ -77,7 +73,7 @@ Create a `.cursor/mcp.json` file in your project root:
   "mcpServers": {
     "logfire": {
       "command": "uvx",
-      "args": ["logfire-mcp", "--read-token=YOUR-TOKEN"]
+      "args": ["logfire-mcp@latest", "--read-token=YOUR-TOKEN"]
     }
   }
 }
@@ -92,7 +88,7 @@ Add to your Claude settings:
 ```json
 {
   "command": ["uvx"],
-  "args": ["logfire-mcp"],
+  "args": ["logfire-mcp@latest"],
   "type": "stdio",
   "env": {
     "LOGFIRE_READ_TOKEN": "YOUR_TOKEN"
@@ -109,7 +105,7 @@ Add to your Cline settings in `cline_mcp_settings.json`:
   "mcpServers": {
     "logfire": {
       "command": "uvx",
-      "args": ["logfire-mcp"],
+      "args": ["logfire-mcp@latest"],
       "env": {
         "LOGFIRE_READ_TOKEN": "YOUR_TOKEN"
       },
@@ -126,41 +122,17 @@ By default, the server connects to the Logfire API at `https://api-us.pydantic.d
 
 1. Using the `--base-url` argument:
 ```bash
-uvx logfire-mcp --base-url=https://your-logfire-instance.com
+uvx logfire-mcp@latest --base-url=https://your-logfire-instance.com
 ```
 
 2. Setting the environment variable:
 ```bash
-LOGFIRE_BASE_URL=https://your-logfire-instance.com uvx logfire-mcp
+LOGFIRE_BASE_URL=https://your-logfire-instance.com uvx logfire-mcp@latest
 ```
 
 ## Example Interactions
 
-1. Find all exceptions in traces from the last hour:
-```json
-{
-  "name": "find_exceptions",
-  "arguments": {
-    "age": 60
-  }
-}
-```
-
-Response:
-```json
-[
-  {
-    "filepath": "app/api.py",
-    "count": 12
-  },
-  {
-    "filepath": "app/models.py",
-    "count": 5
-  }
-]
-```
-
-2. Get details about exceptions from traces in a specific file:
+1. Get details about exceptions from traces in a specific file:
 ```json
 {
   "name": "find_exceptions_in_file",
@@ -190,7 +162,7 @@ Response:
 ]
 ```
 
-3. Run a custom query on traces:
+2. Run a custom query on traces:
 ```json
 {
   "name": "arbitrary_query",
@@ -217,7 +189,7 @@ Response:
 
 2. Run the MCP server:
    ```bash
-   uvx logfire-mcp --read-token=YOUR_TOKEN
+   uvx logfire-mcp@latest --read-token=YOUR_TOKEN
    ```
 
 3. Configure your preferred client (Cursor, Claude Desktop, or Cline) using the configuration examples above
