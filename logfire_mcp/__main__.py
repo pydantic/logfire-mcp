@@ -12,7 +12,7 @@ from typing import Annotated, Any, Literal, TypedDict, cast
 from logfire.experimental.query_client import AsyncLogfireQueryClient
 from mcp.server.fastmcp import Context, FastMCP
 from mcp.server.session import ServerSession
-from pydantic import AfterValidator, BaseModel
+from pydantic import AfterValidator
 
 HOUR = 60  # minutes
 DAY = 24 * HOUR
@@ -23,11 +23,6 @@ __version__ = version("logfire-mcp")
 @dataclass
 class MCPState:
     logfire_client: AsyncLogfireQueryClient
-
-
-class ExceptionCount(BaseModel):
-    filepath: str | None
-    count: int
 
 
 def validate_age(age: int) -> int:
@@ -41,28 +36,6 @@ def validate_age(age: int) -> int:
 
 ValidatedAge = Annotated[int, AfterValidator(validate_age)]
 """We don't want to add exclusiveMaximum on the schema because it fails with some models."""
-
-
-async def find_exceptions(ctx: Context[ServerSession, MCPState], age: ValidatedAge) -> list[ExceptionCount]:
-    """Get the exceptions on a file.
-
-    Args:
-        age: Number of minutes to look back, e.g. 30 for last 30 minutes. Maximum allowed value is 7 days.
-    """
-    logfire_client = ctx.request_context.lifespan_context.logfire_client
-    min_timestamp = datetime.now(UTC) - timedelta(minutes=age)
-    result = await logfire_client.query_json_rows(
-        """\
-        SELECT attributes->>'code.filepath' as filepath, count(*) as count
-        FROM records
-        WHERE is_exception and attributes->>'code.filepath' is not null
-        GROUP BY filepath
-        ORDER BY count DESC
-        LIMIT 100
-        """,
-        min_timestamp=min_timestamp,
-    )
-    return [ExceptionCount(**row) for row in result["rows"]]
 
 
 async def find_exceptions_in_file(ctx: Context[ServerSession, MCPState], filepath: str, age: ValidatedAge) -> list[Any]:
@@ -82,11 +55,9 @@ async def find_exceptions_in_file(ctx: Context[ServerSession, MCPState], filepat
             exception_type,
             exception_message,
             exception_stacktrace,
-            attributes->>'code.function' as function_name,
-            attributes->>'code.lineno' as line_number
         FROM records
         WHERE is_exception = true
-            AND attributes->>'code.filepath' = '{filepath}'
+            AND exception_stacktrace like '%{filepath}%'
         ORDER BY created_at DESC
         LIMIT 10
     """,
@@ -185,7 +156,6 @@ def app_factory(logfire_read_token: str, logfire_base_url: str) -> FastMCP:
             yield MCPState(logfire_client=client)
 
     mcp = FastMCP("Logfire", lifespan=lifespan)
-    mcp.tool()(find_exceptions)
     mcp.tool()(find_exceptions_in_file)
     mcp.tool()(arbitrary_query)
     mcp.tool()(get_logfire_records_schema)
