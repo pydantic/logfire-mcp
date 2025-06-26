@@ -122,7 +122,7 @@ Add to your Cline settings in `cline_mcp_settings.json`:
 
 ### Customization - Base URL
 
-By default, the server connects to the Logfire API at `https://logfire-api.pydantic.dev`. You can override this by:
+By default, the server connects to the Logfire API at `https://api-us.pydantic.dev`. You can override this by:
 
 1. Using the `--base-url` argument:
 ```bash
