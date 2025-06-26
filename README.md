@@ -123,17 +123,17 @@ Create a `.vscode/mcp.json` file in your project's root directory:
 
 ```json
 {
-    "servers": {
-        "logfire": {
-            "type": "stdio",
-            "command": "uvx", // or the absolute /path/to/uvx
-            "args": ["logfire-mcp@latest"],
-            "env": {
-                "LOGFIRE_READ_TOKEN": "YOUR_TOKEN",
-                "LOGFIRE_BASE_URL": "https://logfire-eu.pydantic.dev" // choose the correct base url
-            }
-        }
+  "servers": {
+    "logfire": {
+      "type": "stdio",
+      "command": "uvx", // or the absolute /path/to/uvx
+      "args": ["logfire-mcp@latest"],
+      "env": {
+        "LOGFIRE_READ_TOKEN": "YOUR_TOKEN",
+        "LOGFIRE_BASE_URL": "https://logfire-eu.pydantic.dev" // choose the correct base url
+      }
     }
+  }
 }
 ```
 
