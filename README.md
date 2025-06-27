@@ -130,7 +130,7 @@ Create a `.vscode/mcp.json` file in your project's root directory:
       "args": ["logfire-mcp@latest"],
       "env": {
         "LOGFIRE_READ_TOKEN": "YOUR_TOKEN",
-        "LOGFIRE_BASE_URL": "https://logfire-eu.pydantic.dev" // choose the correct base url
+        "LOGFIRE_BASE_URL": "https://api-eu.pydantic.dev" // choose the correct base url
       }
     }
   }
