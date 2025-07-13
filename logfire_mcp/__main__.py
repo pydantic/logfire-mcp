@@ -67,7 +67,7 @@ async def find_exceptions_in_file(ctx: Context[ServerSession, MCPState], filepat
 
 
 async def arbitrary_query(ctx: Context[ServerSession, MCPState], query: str, age: ValidatedAge) -> list[Any]:
-    """Run an arbitrary query on the Logfire database.
+    """Run an arbitrary query on the Pydantic Logfire database.
 
     The schema is available via the `get_logfire_records_schema` tool.
 
@@ -82,7 +82,7 @@ async def arbitrary_query(ctx: Context[ServerSession, MCPState], query: str, age
 
 
 async def get_logfire_records_schema(ctx: Context[ServerSession, MCPState]) -> str:
-    """Get the records schema from Logfire.
+    """Get the records schema from Pydantic Logfire.
 
     To perform the `arbitrary_query` tool, you can use the `schema://records` to understand the schema.
     """
@@ -130,9 +130,9 @@ def build_schema_description(rows: list[SchemaRow]) -> str:
     resource_attributes = "\n".join([f"* {line}" for line in resource_attribute_lines])
 
     schema_description = f"""\
-The following data was obtained by running the query "SHOW COLUMNS FROM records" in the Logfire datafusion database.
+The following data was obtained by running the query "SHOW COLUMNS FROM records" in the Pydantic Logfire datafusion database.
 We present it here as pseudo-postgres-DDL, but this is a datafusion table.
-Note that Logfire has support for special JSON querying so that you can use the `->` and `->>` operators like in Postgres, despite being a DataFusion database.
+Note that Pydantic Logfire has support for special JSON querying so that you can use the `->` and `->>` operators like in Postgres, despite being a DataFusion database.
 
 CREATE TABLE records AS (
 {indent(normal_columns, "    ")}
@@ -155,7 +155,7 @@ def app_factory(logfire_read_token: str, logfire_base_url: str) -> FastMCP:
         async with AsyncLogfireQueryClient(logfire_read_token, logfire_base_url, headers=headers) as client:
             yield MCPState(logfire_client=client)
 
-    mcp = FastMCP("Logfire", lifespan=lifespan)
+    mcp = FastMCP("Pydantic Logfire", lifespan=lifespan)
     mcp.tool()(find_exceptions_in_file)
     mcp.tool()(arbitrary_query)
     mcp.tool()(get_logfire_records_schema)
@@ -169,13 +169,13 @@ def main():
         "--read-token",
         type=str,
         required=False,
-        help="Logfire read token. Can also be set via LOGFIRE_READ_TOKEN environment variable.",
+        help="Pydantic Logfire read token. Can also be set via LOGFIRE_READ_TOKEN environment variable.",
     )
     parser.add_argument(
         "--base-url",
         type=str,
         required=False,
-        help="Logfire base URL. Can also be set via LOGFIRE_BASE_URL environment variable. "
+        help="Pydantic Logfire base URL. Can also be set via LOGFIRE_BASE_URL environment variable. "
         "Defaults to https://api-us.pydantic.dev",
     )
     args = parser.parse_args()
@@ -184,7 +184,7 @@ def main():
     logfire_read_token = args.read_token or os.getenv("LOGFIRE_READ_TOKEN")
     if not logfire_read_token:
         parser.error(
-            "Logfire read token must be provided either via --read-token argument "
+            "Pydantic Logfire read token must be provided either via --read-token argument "
             "or LOGFIRE_READ_TOKEN environment variable"
         )
 
