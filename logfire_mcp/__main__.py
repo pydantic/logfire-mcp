@@ -155,7 +155,7 @@ def app_factory(logfire_read_token: str, logfire_base_url: str) -> FastMCP:
         async with AsyncLogfireQueryClient(logfire_read_token, logfire_base_url, headers=headers) as client:
             yield MCPState(logfire_client=client)
 
-    mcp = FastMCP("Pydantic Logfire", lifespan=lifespan)
+    mcp = FastMCP("Logfire", lifespan=lifespan)
     mcp.tool()(find_exceptions_in_file)
     mcp.tool()(arbitrary_query)
     mcp.tool()(get_logfire_records_schema)
