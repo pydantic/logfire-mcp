@@ -1,14 +1,14 @@
-# Logfire MCP Server
+# Pydantic Logfire MCP Server
 
 This repository contains a Model Context Protocol (MCP) server with tools that can access the OpenTelemetry traces and
-metrics you've sent to Logfire.
+metrics you've sent to Pydantic Logfire.
 
 <a href="https://glama.ai/mcp/servers/@pydantic/logfire-mcp">
-  <img width="380" height="200" src="https://glama.ai/mcp/servers/@pydantic/logfire-mcp/badge" alt="Logfire Server MCP server" />
+  <img width="380" height="200" src="https://glama.ai/mcp/servers/@pydantic/logfire-mcp/badge" alt="Pydantic Logfire Server MCP server" />
 </a>
 
 This MCP server enables LLMs to retrieve your application's telemetry data, analyze distributed
-traces, and make use of the results of arbitrary SQL queries executed using the Logfire APIs.
+traces, and make use of the results of arbitrary SQL queries executed using the Pydantic Logfire APIs.
 
 ## Available Tools
 
@@ -34,17 +34,17 @@ For installation instructions, see the [`uv` installation docs](https://docs.ast
 
 If you already have an older version of `uv` installed, you might need to update it with `uv self update`.
 
-### Obtain a Logfire read token
-In order to make requests to the Logfire APIs, the Logfire MCP server requires a "read token".
+### Obtain a Pydantic Logfire read token
+In order to make requests to the Pydantic Logfire APIs, the Pydantic Logfire MCP server requires a "read token".
 
-You can create one under the "Read Tokens" section of your project settings in Logfire:
+You can create one under the "Read Tokens" section of your project settings in Pydantic Logfire:
 https://logfire.pydantic.dev/-/redirect/latest-project/settings/read-tokens
 
 > [!IMPORTANT]
-> Logfire read tokens are project-specific, so you need to create one for the specific project you want to expose to the Logfire MCP server.
+> Pydantic Logfire read tokens are project-specific, so you need to create one for the specific project you want to expose to the Pydantic Logfire MCP server.
 
 ### Manually run the server
-Once you have `uv` installed and have a Logfire read token, you can manually run the MCP server using `uvx` (which is provided by `uv`).
+Once you have `uv` installed and have a Pydantic Logfire read token, you can manually run the MCP server using `uvx` (which is provided by `uv`).
 
 You can specify your read token using the `LOGFIRE_READ_TOKEN` environment variable:
 
@@ -60,7 +60,7 @@ uvx logfire-mcp@latest --read-token=YOUR_READ_TOKEN
 > [!NOTE]
 > If you are using Cursor, Claude Desktop, Cline, or other MCP clients that manage your MCP servers for you, you **_do
     NOT_** need to manually run the server yourself. The next section will show you how to configure these clients to make
-    use of the Logfire MCP server.
+    use of the Pydantic Logfire MCP server.
 
 ## Configuration with well-known MCP clients
 
@@ -139,7 +139,7 @@ Create a `.vscode/mcp.json` file in your project's root directory:
 
 ### Customization - Base URL
 
-By default, the server connects to the Logfire API at `https://api-us.pydantic.dev`. You can override this by:
+By default, the server connects to the Pydantic Logfire API at `https://api-us.pydantic.dev`. You can override this by:
 
 1. Using the `--base-url` argument:
 ```bash
@@ -205,7 +205,7 @@ Response:
 
 ## Getting Started
 
-1. First, obtain a Logfire read token from:
+1. First, obtain a Pydantic Logfire read token from:
    https://logfire.pydantic.dev/-/redirect/latest-project/settings/read-tokens
 
 2. Run the MCP server:
@@ -219,10 +219,10 @@ Response:
 
 ## Contributing
 
-We welcome contributions to help improve the Logfire MCP server. Whether you want to add new trace analysis tools, enhance metrics querying functionality, or improve documentation, your input is valuable.
+We welcome contributions to help improve the Pydantic Logfire MCP server. Whether you want to add new trace analysis tools, enhance metrics querying functionality, or improve documentation, your input is valuable.
 
 For examples of other MCP servers and implementation patterns, see the [Model Context Protocol servers repository](https://github.com/modelcontextprotocol/servers).
 
 ## License
 
-Logfire MCP is licensed under the MIT License. This means you are free to use, modify, and distribute the software, subject to the terms and conditions of the MIT License.
+Pydantic Logfire MCP is licensed under the MIT License. This means you are free to use, modify, and distribute the software, subject to the terms and conditions of the MIT License.
