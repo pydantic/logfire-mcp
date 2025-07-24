@@ -1,27 +1,24 @@
 import re
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
-from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from importlib.metadata import version
 from textwrap import indent
 from typing import Annotated, Any, Literal, TypedDict, cast
 
-from httpx import URL
 from logfire.experimental.query_client import AsyncLogfireQueryClient
 from mcp.server.fastmcp import Context, FastMCP
 from mcp.server.session import ServerSession
 from pydantic import Field, WithJsonSchema
 
+from .overview import overview_analysis
+from .sql_reference import sql_reference
+from .state import MCPState
+
 HOUR = 60  # minutes
 DAY = 24 * HOUR
 
 __version__ = version("logfire-mcp")
-
-
-@dataclass
-class MCPState:
-    logfire_client: AsyncLogfireQueryClient
 
 
 ValidatedAge = Annotated[int, Field(ge=0, le=7 * HOUR * DAY), WithJsonSchema({"type": "integer"})]
@@ -111,6 +108,8 @@ def app_factory(logfire_read_token: str) -> FastMCP:
     mcp.tool()(arbitrary_query)
     mcp.tool()(get_logfire_records_schema)
     mcp.tool()(logfire_link)
+    mcp.resource("logfire://reference")(sql_reference)
+    mcp.tool()(overview_analysis)
 
     return mcp
 
