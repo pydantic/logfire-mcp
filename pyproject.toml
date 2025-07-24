@@ -27,7 +27,7 @@ classifiers = [
 ]
 dependencies = [
     "logfire>=3.7.1",
-    "mcp[cli]~=1.7.1"
+    "mcp[cli]>=1.10.0",
 ]
 
 [project.scripts]
@@ -39,7 +39,11 @@ Repository = "https://github.com/pydantic/logfire-mcp"
 Issues = "https://github.com/pydantic/logfire-mcp/issues"
 
 [dependency-groups]
-dev = ["ruff"]
+dev = [
+    "inline-snapshot[black]>=0.24.0",
+    "pytest-recording>=0.13.4",
+    "ruff",
+]
 
 [tool.ruff]
 line-length = 120
@@ -57,3 +61,10 @@ ignore = ["UP031"] # https://docs.astral.sh/ruff/rules/printf-string-formatting/
 
 [tool.ruff.lint.isort]
 combine-as-imports = true
+
+[tool.inline-snapshot]
+format-command = "ruff format --stdin-filename {filename}"
+
+[tool.inline-snapshot.shortcuts]
+snap-fix = ["create", "fix"]
+snap = ["create"]

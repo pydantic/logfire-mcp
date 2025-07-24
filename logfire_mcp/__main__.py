@@ -9,10 +9,11 @@ from importlib.metadata import version
 from textwrap import indent
 from typing import Annotated, Any, Literal, TypedDict, cast
 
+from httpx import URL
 from logfire.experimental.query_client import AsyncLogfireQueryClient
 from mcp.server.fastmcp import Context, FastMCP
 from mcp.server.session import ServerSession
-from pydantic import AfterValidator
+from pydantic import Field, WithJsonSchema
 
 HOUR = 60  # minutes
 DAY = 24 * HOUR
@@ -25,16 +26,7 @@ class MCPState:
     logfire_client: AsyncLogfireQueryClient
 
 
-def validate_age(age: int) -> int:
-    """Validate that the age is within acceptable bounds (positive and <= 7 days)."""
-    if age <= 0:
-        raise ValueError("Age must be positive")
-    if age > 7 * DAY:
-        raise ValueError("Age cannot be more than 7 days")
-    return age
-
-
-ValidatedAge = Annotated[int, AfterValidator(validate_age)]
+ValidatedAge = Annotated[int, Field(ge=0, le=7 * HOUR * DAY), WithJsonSchema({"type": "integer"})]
 """We don't want to add exclusiveMaximum on the schema because it fails with some models."""
 
 
@@ -148,6 +140,31 @@ And for `otel_resource_attributes`:
     return schema_description
 
 
+class ReadTokenInfo(TypedDict):
+    token_id: str
+    organization_id: str
+    project_id: str
+    organization_name: str
+    project_name: str
+
+
+async def logfire_link(ctx: Context[ServerSession, MCPState], trace_id: str) -> str:
+    """Creates a link to help the user to view the trace in the Logfire UI.
+
+    Args:
+        trace_id: The trace ID to link to.
+    """
+    logfire_client = ctx.request_context.lifespan_context.logfire_client
+    response = await logfire_client.client.get("/api/read-token-info")
+    read_token_info = cast(ReadTokenInfo, response.json())
+    organization_name = read_token_info["organization_name"]
+    project_name = read_token_info["project_name"]
+
+    url = URL(f"https://logfire-us.pydantic.dev/{organization_name}/{project_name}")
+    url = url.copy_add_param("q", f"trace_id='{trace_id}'")
+    return str(url)
+
+
 def app_factory(logfire_read_token: str, logfire_base_url: str) -> FastMCP:
     @asynccontextmanager
     async def lifespan(server: FastMCP) -> AsyncIterator[MCPState]:
@@ -159,6 +176,7 @@ def app_factory(logfire_read_token: str, logfire_base_url: str) -> FastMCP:
     mcp.tool()(find_exceptions_in_file)
     mcp.tool()(arbitrary_query)
     mcp.tool()(get_logfire_records_schema)
+    mcp.tool()(logfire_link)
 
     return mcp
 
