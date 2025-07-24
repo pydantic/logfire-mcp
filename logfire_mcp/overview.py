@@ -9,10 +9,11 @@ from psycopg import sql
 
 def overview_analysis(
     filter: str = "is_exception and level >= 'error'", minutes: int = 60, num_attributes: int = 12, num_values: int = 8
-):
+) -> list[sql.Composable]:
     """Analyze a subset of the `records` table to help the user understand the data.
 
     This can be used as a first step, and then the user can use the `arbitrary_query` tool to get more specific details.
+    You can repeat this as many times as you want.
 
     Args:
         filter: SQL filter to apply to records, defaults to: "is_exception and level >= 'error'"
@@ -90,16 +91,7 @@ def overview_analysis(
                 if value and "\n" in value:
                     print()
                 options.append(sql.SQL("{} = {}").format(value_sql, sql.Literal(value)))
-
-    print("\n--------\n")
-    option_num = int(input("Select an option to filter by: "))
-    option = options[option_num]
-    overview_analysis(
-        sql.SQL("{} and {}").format(global_filter, option).as_string(),
-        minutes=minutes,
-        num_attributes=num_attributes,
-        num_values=num_values,
-    )
+    return options
 
 
 def trunc(x: Any) -> str | None:
