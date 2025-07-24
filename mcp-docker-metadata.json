@@ -1,0 +1,72 @@
+{
+  "name": "logfire",
+  "version": "1.0.0",
+  "description": "Access OpenTelemetry traces and metrics from Logfire for debugging and analysis",
+  "author": "Pydantic",
+  "homepage": "https://github.com/pydantic/logfire-mcp",
+  "license": "MIT",
+  "categories": ["observability", "monitoring", "debugging"],
+  "mcp_version": "1.0",
+  "docker": {
+    "image": "mcp/logfire",
+    "platforms": ["linux/amd64", "linux/arm64"],
+    "env_required": ["LOGFIRE_READ_TOKEN"],
+    "env_optional": ["LOGFIRE_BASE_URL"]
+  },
+  "tools": [
+    {
+      "name": "find_exceptions",
+      "description": "Get exception counts from traces grouped by file",
+      "parameters": {
+        "age": {
+          "type": "integer",
+          "description": "Number of minutes to look back (max 7 days)",
+          "required": true
+        }
+      }
+    },
+    {
+      "name": "find_exceptions_in_file",
+      "description": "Get detailed trace information about exceptions in a specific file",
+      "parameters": {
+        "filepath": {
+          "type": "string",
+          "description": "Path to the file to analyze",
+          "required": true
+        },
+        "age": {
+          "type": "integer",
+          "description": "Number of minutes to look back (max 7 days)",
+          "required": true
+        }
+      }
+    },
+    {
+      "name": "arbitrary_query",
+      "description": "Run custom SQL queries on your OpenTelemetry traces and metrics",
+      "parameters": {
+        "query": {
+          "type": "string",
+          "description": "SQL query to execute",
+          "required": true
+        },
+        "age": {
+          "type": "integer",
+          "description": "Number of minutes to look back (max 7 days)",
+          "required": true
+        }
+      }
+    },
+    {
+      "name": "get_logfire_records_schema",
+      "description": "Get the OpenTelemetry schema to help with custom queries",
+      "parameters": {}
+    }
+  ],
+  "example_prompts": [
+    "What exceptions occurred in traces from the last hour?",
+    "Show me errors in app/api.py from the last 24 hours",
+    "How many errors per service in the last day?",
+    "Get the OpenTelemetry schema for traces"
+  ]
+}
