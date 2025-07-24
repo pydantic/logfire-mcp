@@ -1,0 +1,60 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - pylf_v1_us_bW4fyN3RFcvP61XNWkYhrmV62d7Wc6zdlSlM84SwX1sh
+      connection:
+      - keep-alive
+      host:
+      - api-us.pydantic.dev
+      user-agent:
+      - logfire-mcp/0.0.1
+    method: GET
+    uri: https://api-us.pydantic.dev/api/read-token-info
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA1yNSQrDMAwA/6JzBN4S2/lMsS0puFkcQgqlpX/vJYfS68DMvOFsM2+3SjBCCr0u
+        YgkDeYuOs2D2VqPW3gWT+hy5hw7aMaWtvtJZ2yUaoiKKBxRKCp0vgoGiYLAmqaDUECJBB/vR7lzO
+        a9ZrTqwMRi2CTgbBmKNHUkNmU4JT0fzPtrQyjDAvD+LnT/DiS5ukHoxr2eHzBQAA//8DAGdhjOza
+        AAAA
+    headers:
+      CF-RAY:
+      - 96424878be52f5df-AMS
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 24 Jul 2025 09:10:12 GMT
+      NEL:
+      - '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+      Report-To:
+      - '{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=xAILmf42r9HxDN7HgPU7tpQPk6na30vuxdPRfSAaqnwTSP6pN1oo5TAzBEghQ2qQZHcKO9waqq6SFbzFrJPIygZXwtJJxpPddPrA09RD%2BM12u39sq9AgsuMMSoBcKl9emaIbXMU%3D"}],"group":"cf-nel","max_age":604800}'
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      access-control-expose-headers:
+      - traceresponse
+      cf-cache-status:
+      - DYNAMIC
+      server-timing:
+      - cfL4;desc="?proto=TCP&rtt=13194&min_rtt=13048&rtt_var=4997&sent=4&recv=6&lost=0&retrans=0&sent_bytes=2843&recv_bytes=855&delivery_rate=221949&cwnd=197&unsent_bytes=0&cid=070aa176b784b1d7&ts=155&x=0"
+      traceresponse:
+      - 00-01983bb287be26b3630ede101caa6fde-1029cde442f4aee7-01
+      via:
+      - 1.1 google
+      x-api-version:
+      - 8B3/58p72Z+yU8ZrVkBW+6WjdphoLsyQ1sXK9c1305Y=
+    status:
+      code: 200
+      message: OK
+version: 1
