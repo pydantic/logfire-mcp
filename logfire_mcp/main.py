@@ -1,7 +1,6 @@
 import re
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
-from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from importlib.metadata import version
 from textwrap import indent
@@ -14,16 +13,12 @@ from pydantic import Field, WithJsonSchema
 
 from .overview import overview_analysis
 from .sql_reference import sql_reference
+from .state import MCPState
 
 HOUR = 60  # minutes
 DAY = 24 * HOUR
 
 __version__ = version("logfire-mcp")
-
-
-@dataclass
-class MCPState:
-    logfire_client: AsyncLogfireQueryClient
 
 
 ValidatedAge = Annotated[int, Field(ge=0, le=7 * HOUR * DAY), WithJsonSchema({"type": "integer"})]
