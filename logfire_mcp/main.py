@@ -13,6 +13,9 @@ from mcp.server.fastmcp import Context, FastMCP
 from mcp.server.session import ServerSession
 from pydantic import Field, WithJsonSchema
 
+from .overview import overview_analysis
+from .sql_reference import sql_reference
+
 HOUR = 60  # minutes
 DAY = 24 * HOUR
 
@@ -110,6 +113,8 @@ def app_factory(logfire_read_token: str, logfire_base_url: str) -> FastMCP:
     mcp.tool()(arbitrary_query)
     mcp.tool()(get_logfire_records_schema)
     mcp.tool()(logfire_link)
+    mcp.resource("logfire://reference")(sql_reference)
+    mcp.tool()(overview_analysis)
 
     return mcp
 

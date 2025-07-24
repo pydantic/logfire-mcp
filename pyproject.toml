@@ -28,6 +28,7 @@ classifiers = [
 dependencies = [
     "logfire>=3.7.1",
     "mcp[cli]>=1.10.0",
+    "psycopg>=3.2.9",
 ]
 
 [project.scripts]
