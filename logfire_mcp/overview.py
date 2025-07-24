@@ -16,6 +16,7 @@ async def overview_analysis(
     minutes: int = 60,
     num_attributes: int = 12,
     num_values: int = 8,
+    offset: int = 0,
 ) -> str:
     """Analyze a subset of the `records` table to help the user understand the data.
 
@@ -27,6 +28,7 @@ async def overview_analysis(
         minutes: Time range in minutes to analyze, default 60
         num_attributes: Number of attributes to break down, default 12
         num_values: Number of distinct values for each column/attribute, default 8
+        offset: The page number to start from, default 0. The next page is offset + 1.
     """
     logfire_client = ctx.request_context.lifespan_context.logfire_client
     global_filter = sql.SQL(filter)  # type: ignore
@@ -104,6 +106,10 @@ async def overview_analysis(
                 if value and "\n" in value:
                     output += "\n"
                 options.append(sql.SQL("{} = {}").format(value_sql, sql.Literal(value)))
+    output_lines = output.splitlines()
+    page_size = 50
+    paginated_lines = output_lines[offset * page_size : (offset + 1) * page_size]
+    output = "\n".join(paginated_lines)
     return output
 
 
