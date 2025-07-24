@@ -29,7 +29,7 @@ async def logfire_read_token() -> str:
 
 @pytest.fixture
 def app(logfire_read_token: str) -> FastMCP:
-    return app_factory(logfire_read_token, "https://api-us.pydantic.dev")
+    return app_factory(logfire_read_token)
 
 
 @pytest.fixture

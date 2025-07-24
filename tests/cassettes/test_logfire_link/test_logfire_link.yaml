@@ -9,11 +9,11 @@ interactions:
       connection:
       - keep-alive
       host:
-      - api-us.pydantic.dev
+      - logfire-us.pydantic.dev
       user-agent:
       - logfire-mcp/0.0.1
     method: GET
-    uri: https://api-us.pydantic.dev/api/read-token-info
+    uri: https://logfire-us.pydantic.dev/api/read-token-info
   response:
     body:
       string: !!binary |
@@ -23,7 +23,7 @@ interactions:
         AAAA
     headers:
       CF-RAY:
-      - 96425c5d687b0bc8-AMS
+      - 9642d5da1b0d8e2b-AMS
       Connection:
       - keep-alive
       Content-Encoding:
@@ -31,11 +31,11 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Thu, 24 Jul 2025 09:23:47 GMT
+      - Thu, 24 Jul 2025 10:46:43 GMT
       NEL:
       - '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
       Report-To:
-      - '{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=yy5J4UYysp%2BfcpgKje3nDVAu8kSS%2BLKgih9sQYVIVnX4DK2MVgCBpFvJxtpWVrv7Vt7YqcTROzG1R5mpJa6xSwbS4EjNZWMBcHPDVvGZp%2BiMVLyZLDLsa2ySSnXUilq1R1AKmw4%3D"}],"group":"cf-nel","max_age":604800}'
+      - '{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=TVKndeKBUZ9UUIU8QID%2Br%2BF0MkAgOekJ4YRA%2FFHmHThY258MlcXh5u%2BSMgQsHYbT3FoHm16%2BHs4tSJKbqrlV7MH7iSgOGyZG6%2BJhLrvE1PmvRgKmWU2CP9mCesHXfI15QS%2F40MUgf7xN"}],"group":"cf-nel","max_age":604800}'
       Server:
       - cloudflare
       Transfer-Encoding:
@@ -45,9 +45,9 @@ interactions:
       cf-cache-status:
       - DYNAMIC
       server-timing:
-      - cfL4;desc="?proto=TCP&rtt=11759&min_rtt=11334&rtt_var=3522&sent=4&recv=7&lost=0&retrans=0&sent_bytes=2841&recv_bytes=855&delivery_rate=236022&cwnd=109&unsent_bytes=0&cid=cfce23c69988c370&ts=163&x=0"
+      - cfL4;desc="?proto=TCP&rtt=12009&min_rtt=11967&rtt_var=4572&sent=4&recv=6&lost=0&retrans=0&sent_bytes=2842&recv_bytes=859&delivery_rate=235351&cwnd=251&unsent_bytes=0&cid=7be84c57075589e0&ts=155&x=0"
       traceresponse:
-      - 00-01983bbef6b893518910cf51af5a989f-f963cd5f697b3294-01
+      - 00-01983c0ae49920d2e99eb1a9caf6f900-c099b7d6ff90dd17-01
       via:
       - 1.1 google
       x-api-version:

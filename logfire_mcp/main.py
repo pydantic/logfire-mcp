@@ -7,7 +7,6 @@ from importlib.metadata import version
 from textwrap import indent
 from typing import Annotated, Any, Literal, TypedDict, cast
 
-from httpx import URL
 from logfire.experimental.query_client import AsyncLogfireQueryClient
 from mcp.server.fastmcp import Context, FastMCP
 from mcp.server.session import ServerSession
@@ -96,16 +95,17 @@ async def logfire_link(ctx: Context[ServerSession, MCPState], trace_id: str) -> 
     organization_name = read_token_info["organization_name"]
     project_name = read_token_info["project_name"]
 
-    url = URL(f"https://logfire-us.pydantic.dev/{organization_name}/{project_name}")
+    url = logfire_client.client.base_url
+    url = url.join(f"{organization_name}/{project_name}")
     url = url.copy_add_param("q", f"trace_id='{trace_id}'")
     return str(url)
 
 
-def app_factory(logfire_read_token: str, logfire_base_url: str) -> FastMCP:
+def app_factory(logfire_read_token: str) -> FastMCP:
     @asynccontextmanager
     async def lifespan(server: FastMCP) -> AsyncIterator[MCPState]:
         headers = {"User-Agent": f"logfire-mcp/{__version__}"}
-        async with AsyncLogfireQueryClient(logfire_read_token, logfire_base_url, headers=headers) as client:
+        async with AsyncLogfireQueryClient(logfire_read_token, headers=headers) as client:
             yield MCPState(logfire_client=client)
 
     mcp = FastMCP("Logfire", lifespan=lifespan)
