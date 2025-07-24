@@ -115,6 +115,7 @@ Add to your Cline settings in `cline_mcp_settings.json`:
   }
 }
 ```
+
 ### Configure for VS Code
 
 Make sure you [enabled MCP support in VS Code](https://code.visualstudio.com/docs/copilot/chat/mcp-servers#_enable-mcp-support-in-vs-code).
@@ -130,25 +131,10 @@ Create a `.vscode/mcp.json` file in your project's root directory:
       "args": ["logfire-mcp@latest"],
       "env": {
         "LOGFIRE_READ_TOKEN": "YOUR_TOKEN",
-        "LOGFIRE_BASE_URL": "https://api-eu.pydantic.dev" // choose the correct base url
       }
     }
   }
 }
-```
-
-### Customization - Base URL
-
-By default, the server connects to the Pydantic Logfire API at `https://api-us.pydantic.dev`. You can override this by:
-
-1. Using the `--base-url` argument:
-```bash
-uvx logfire-mcp@latest --base-url=https://your-logfire-instance.com
-```
-
-2. Setting the environment variable:
-```bash
-LOGFIRE_BASE_URL=https://your-logfire-instance.com uvx logfire-mcp@latest
 ```
 
 ## Example Interactions

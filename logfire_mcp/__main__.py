@@ -12,13 +12,6 @@ def main():
         required=False,
         help="Pydantic Logfire read token. Can also be set via LOGFIRE_READ_TOKEN environment variable.",
     )
-    parser.add_argument(
-        "--base-url",
-        type=str,
-        required=False,
-        help="Pydantic Logfire base URL. Can also be set via LOGFIRE_BASE_URL environment variable. "
-        "Defaults to https://api-us.pydantic.dev",
-    )
     args = parser.parse_args()
 
     # Get token from args or environment
@@ -29,10 +22,7 @@ def main():
             "or LOGFIRE_READ_TOKEN environment variable"
         )
 
-    # Get base URL from args, environment, or default
-    logfire_base_url = args.base_url or os.getenv("LOGFIRE_BASE_URL") or "https://api-us.pydantic.dev"
-
-    app = app_factory(logfire_read_token, logfire_base_url)
+    app = app_factory(logfire_read_token)
     app.run(transport="stdio")
 
 
