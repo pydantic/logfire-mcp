@@ -1,27 +1,23 @@
 import re
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
-from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from importlib.metadata import version
 from textwrap import indent
 from typing import Annotated, Any, Literal, TypedDict, cast
 
-from httpx import URL
 from logfire.experimental.query_client import AsyncLogfireQueryClient
 from mcp.server.fastmcp import Context, FastMCP
 from mcp.server.session import ServerSession
 from pydantic import Field, WithJsonSchema
 
+from .sql_reference import sql_reference
+from .state import MCPState
+
 HOUR = 60  # minutes
 DAY = 24 * HOUR
 
 __version__ = version("logfire-mcp")
-
-
-@dataclass
-class MCPState:
-    logfire_client: AsyncLogfireQueryClient
 
 
 ValidatedAge = Annotated[int, Field(ge=0, le=7 * HOUR * DAY), WithJsonSchema({"type": "integer"})]
@@ -59,7 +55,7 @@ async def find_exceptions_in_file(ctx: Context[ServerSession, MCPState], filepat
 async def arbitrary_query(ctx: Context[ServerSession, MCPState], query: str, age: ValidatedAge) -> list[Any]:
     """Run an arbitrary query on the Pydantic Logfire database.
 
-    The schema is available via the `get_logfire_records_schema` tool.
+    The SQL reference is available via the `sql_reference` tool.
 
     Args:
         query: The query to run, as a SQL string.
@@ -72,10 +68,7 @@ async def arbitrary_query(ctx: Context[ServerSession, MCPState], query: str, age
 
 
 async def get_logfire_records_schema(ctx: Context[ServerSession, MCPState]) -> str:
-    """Get the records schema from Pydantic Logfire.
-
-    To perform the `arbitrary_query` tool, you can use the `schema://records` to understand the schema.
-    """
+    """Get the records schema from Pydantic Logfire."""
     logfire_client = ctx.request_context.lifespan_context.logfire_client
     result = await logfire_client.query_json_rows("SHOW COLUMNS FROM records")
     return build_schema_description(cast(list[SchemaRow], result["rows"]))
@@ -109,6 +102,7 @@ def app_factory(logfire_read_token: str) -> FastMCP:
     mcp = FastMCP("Logfire", lifespan=lifespan)
     mcp.tool()(find_exceptions_in_file)
     mcp.tool()(arbitrary_query)
+    mcp.tool()(sql_reference)
     mcp.tool()(get_logfire_records_schema)
     mcp.tool()(logfire_link)
 
