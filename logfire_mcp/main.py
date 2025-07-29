@@ -96,7 +96,8 @@ async def logfire_link(ctx: Context[ServerSession, MCPState], trace_id: str) -> 
 def app_factory(logfire_read_token: str) -> FastMCP:
     @asynccontextmanager
     async def lifespan(server: FastMCP) -> AsyncIterator[MCPState]:
-        print('starting MCP server', file=sys.stderr)
+        # print to stderr so we this message doesn't get read by the MCP client
+        print('starting Logfire MCP server', file=sys.stderr)
         headers = {'User-Agent': f'logfire-mcp/{__version__}'}
         async with AsyncLogfireQueryClient(logfire_read_token, headers=headers) as client:
             yield MCPState(logfire_client=client)
