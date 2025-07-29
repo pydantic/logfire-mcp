@@ -29,17 +29,11 @@ typecheck:  ## Run static type checking
 	PYRIGHT_PYTHON_IGNORE_WARNINGS=1 uv run pyright
 
 .PHONY: test
-test: ## Run tests and collect coverage data
-	uv run coverage run -m pytest
-	@uv run coverage report
-
-.PHONY: testcov
-testcov: test ## Run tests and generate an HTML coverage report
-	@echo "building coverage html"
-	@uv run coverage html
+test: ## Run tests
+	uv run pytest
 
 .PHONY: all
-all: format lint typecheck testcov ## Run code formatting, linting, static type checks, and tests with coverage report generation
+all: format lint typecheck test ## Run code formatting, linting, static type checks, and tests
 
 .PHONY: help
 help: ## Show this help (usage: make help)

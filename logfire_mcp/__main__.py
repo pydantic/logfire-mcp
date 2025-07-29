@@ -1,6 +1,8 @@
 import argparse
 import os
 
+from dotenv import load_dotenv
+
 from .main import __version__, app_factory
 
 
@@ -23,6 +25,7 @@ def main():
         print(name_version)
         return
 
+    load_dotenv()
     # Get token from args or environment
     logfire_read_token = args.read_token or os.getenv('LOGFIRE_READ_TOKEN')
     if not logfire_read_token:

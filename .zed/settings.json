@@ -1,0 +1,11 @@
+{
+  "context_servers": {
+    "logfire": {
+      "source": "custom",
+      // use uv run logfire-mcp, not uvx so we use the local version
+      "command": "uv",
+      "args": ["run", "logfire-mcp"],
+      "enabled": true
+    }
+  }
+}
