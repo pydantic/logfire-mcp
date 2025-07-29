@@ -39,4 +39,5 @@ jobs:
           name: release-dists
           path: dist/
 
+      - uses: astral-sh/setup-uv@v6
       - run: uv publish --trusted-publishing always
