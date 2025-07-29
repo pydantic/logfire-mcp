@@ -108,6 +108,9 @@ def app_factory(logfire_read_token: str) -> FastMCP:
     mcp.tool()(sql_reference)
     mcp.tool()(get_logfire_records_schema)
     mcp.tool()(logfire_link)
+    # add SQL reference as a resource as well as a tool
+    # not all clients support resources but those that do should benefit from this
+    mcp.resource('config://sql_reference')(sql_reference)
 
     return mcp
 
