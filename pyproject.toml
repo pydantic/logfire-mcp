@@ -30,7 +30,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
 ]
-dependencies = ["logfire>=3.7.1", "mcp[cli]>=1.10.0"]
+dependencies = ["logfire>=3.7.1", "mcp[cli]>=1.10.0", "python-dotenv>=1.1.1"]
 
 [project.scripts]
 logfire-mcp = "logfire_mcp.__main__:main"

@@ -44,6 +44,7 @@ https://logfire.pydantic.dev/-/redirect/latest-project/settings/read-tokens
 > Pydantic Logfire read tokens are project-specific, so you need to create one for the specific project you want to expose to the Pydantic Logfire MCP server.
 
 ### Manually run the server
+
 Once you have `uv` installed and have a Pydantic Logfire read token, you can manually run the MCP server using `uvx` (which is provided by `uv`).
 
 You can specify your read token using the `LOGFIRE_READ_TOKEN` environment variable:
@@ -51,6 +52,14 @@ You can specify your read token using the `LOGFIRE_READ_TOKEN` environment varia
 ```bash
 LOGFIRE_READ_TOKEN=YOUR_READ_TOKEN uvx logfire-mcp@latest
 ```
+
+You can also set `LOGFIRE_READ_TOKEN` in a `.env` file:
+
+```bash
+LOGFIRE_READ_TOKEN=pylf_v1_us_...
+```
+
+**NOTE:** for this to work, the MCP server needs to run with the directory containing the `.env` file in its working directory.
 
 or using the `--read-token` flag:
 
@@ -130,11 +139,39 @@ Create a `.vscode/mcp.json` file in your project's root directory:
       "command": "uvx", // or the absolute /path/to/uvx
       "args": ["logfire-mcp@latest"],
       "env": {
-        "LOGFIRE_READ_TOKEN": "YOUR_TOKEN",
+        "LOGFIRE_READ_TOKEN": "YOUR_TOKEN"
       }
     }
   }
 }
+```
+
+### Configure for Zed
+
+Create a `.zed/settings.json` file in your project's root directory:
+
+```json
+{
+  "context_servers": {
+    "logfire": {
+      "source": "custom",
+      "command": "uvx",
+      "args": ["logfire-mcp@latest"],
+      "env": {
+        "LOGFIRE_READ_TOKEN": "YOUR_TOKEN"
+      },
+      "enabled": true
+    }
+  }
+}
+```
+
+### Configure for Claude code
+
+Run the following command
+
+```bash
+claude mcp add logfire uvx logfire-mcp@latest --read-token=YOUR_TOKEN
 ```
 
 ## Example Interactions

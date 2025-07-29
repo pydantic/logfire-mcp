@@ -321,6 +321,7 @@ source = { editable = "." }
 dependencies = [
     { name = "logfire" },
     { name = "mcp", extra = ["cli"] },
+    { name = "python-dotenv" },
 ]
 
 [package.dev-dependencies]
@@ -335,6 +336,7 @@ dev = [
 requires-dist = [
     { name = "logfire", specifier = ">=3.7.1" },
     { name = "mcp", extras = ["cli"], specifier = ">=1.10.0" },
+    { name = "python-dotenv", specifier = ">=1.1.1" },
 ]
 
 [package.metadata.requires-dev]
