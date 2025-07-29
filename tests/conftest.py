@@ -11,20 +11,20 @@ from logfire_mcp.__main__ import app_factory
 
 @pytest.fixture
 def anyio_backend():
-    return "asyncio"
+    return 'asyncio'
 
 
 @pytest.fixture
 def vcr_config():
     return {
-        "filter_headers": [("authorization", None)],
+        'filter_headers': [('authorization', None)],
     }
 
 
 @pytest.fixture
 async def logfire_read_token() -> str:
     # To get a read token, go to https://logfire-us.pydantic.dev/kludex/logfire-mcp/settings/read-tokens/.
-    return os.getenv("LOGFIRE_READ_TOKEN", "fake-token")
+    return os.getenv('LOGFIRE_READ_TOKEN', 'fake-token')
 
 
 @pytest.fixture

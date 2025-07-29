@@ -14,22 +14,23 @@ bump = true
 name = "logfire-mcp"
 dynamic = ["version"]
 description = "The Pydantic Logfire MCP server! 🔍"
+authors = [
+    { name = "Marcelo Trylesinski", email = "marcelotryle@gmail.com" },
+    { name = "Samuel Colvin", email = "samuel@pydantic.dev" },
+]
 readme = "README.md"
 requires-python = ">=3.11"
-license = { text = "MIT" }
+license = "MIT"
+license-files = ["LICENSE"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
 ]
-dependencies = [
-    "logfire>=3.7.1",
-    "mcp[cli]>=1.10.0",
-]
+dependencies = ["logfire>=3.7.1", "mcp[cli]>=1.10.0"]
 
 [project.scripts]
 logfire-mcp = "logfire_mcp.__main__:main"
@@ -42,6 +43,7 @@ Issues = "https://github.com/pydantic/logfire-mcp/issues"
 [dependency-groups]
 dev = [
     "inline-snapshot[black]>=0.24.0",
+    "pyright>=1.1.403",
     "pytest-recording>=0.13.4",
     "ruff",
 ]
@@ -50,18 +52,23 @@ dev = [
 line-length = 120
 
 [tool.ruff.lint]
-select = [
-    "E",      # https://docs.astral.sh/ruff/rules/#error-e
-    "F",      # https://docs.astral.sh/ruff/rules/#pyflakes-f
-    "I",      # https://docs.astral.sh/ruff/rules/#isort-i
-    "FA",     # https://docs.astral.sh/ruff/rules/#flake8-future-annotations-fa
-    "UP",     # https://docs.astral.sh/ruff/rules/#pyupgrade-up
-    "RUF100", # https://docs.astral.sh/ruff/rules/#ruff-specific-rules-ruf
+extend-select = [
+    "Q",
+    "RUF100",
+    "RUF018", # https://docs.astral.sh/ruff/rules/assignment-in-assert/
+    "C90",
+    "UP",
+    "I",
+    "TID251",
 ]
 ignore = ["UP031"] # https://docs.astral.sh/ruff/rules/printf-string-formatting/
+flake8-quotes = { inline-quotes = "single", multiline-quotes = "double" }
+isort = { combine-as-imports = true }
 
-[tool.ruff.lint.isort]
-combine-as-imports = true
+[tool.ruff.format]
+# don't format python in docstrings, pytest-examples takes care of it
+docstring-code-format = false
+quote-style = "single"
 
 [tool.inline-snapshot]
 format-command = "ruff format --stdin-filename {filename}"
