@@ -41,7 +41,7 @@ async def find_exceptions_in_file(ctx: Context[ServerSession, MCPState], filepat
             message,
             exception_type,
             exception_message,
-            exception_stacktrace,
+            exception_stacktrace
         FROM records
         WHERE is_exception = true
             AND exception_stacktrace like '%{filepath}%'
