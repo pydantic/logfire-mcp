@@ -171,7 +171,7 @@ Create a `.zed/settings.json` file in your project's root directory:
 Run the following command
 
 ```bash
-claude mcp add logfire uvx logfire-mcp@latest --read-token=YOUR_TOKEN
+claude mcp add logfire -- uvx logfire-mcp@latest --read-token=YOUR_TOKEN
 ```
 
 ## Example Interactions
