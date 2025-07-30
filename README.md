@@ -26,9 +26,23 @@ traces, and make use of the results of arbitrary SQL queries executed using the 
   * No required arguments
 
 ## Setup
-### Install `uv`
 
-The first thing to do is make sure `uv` is installed, as `uv` is used to run the MCP server.
+### Option 1: Using Docker (Recommended)
+
+The easiest way to run the Logfire MCP server is using Docker:
+
+```bash
+docker run -i --rm \
+  -e LOGFIRE_READ_TOKEN=YOUR_TOKEN \
+  -e DOCKER_CONTAINER=true \
+  mcp/logfire
+```
+
+See [DOCKER_MCP.md](DOCKER_MCP.md) for detailed Docker setup instructions.
+
+### Option 2: Using `uv`
+
+If you prefer to run the server directly, make sure `uv` is installed, as `uv` is used to run the MCP server.
 
 For installation instructions, see the [`uv` installation docs](https://docs.astral.sh/uv/getting-started/installation/).
 
@@ -77,6 +91,24 @@ uvx logfire-mcp@latest --read-token=YOUR_READ_TOKEN
 
 Create a `.cursor/mcp.json` file in your project root:
 
+**Using Docker:**
+```json
+{
+  "mcpServers": {
+    "logfire": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm",
+        "-e", "DOCKER_CONTAINER=true",
+        "mcp/logfire:latest",
+        "--read-token=YOUR-TOKEN"
+      ]
+    }
+  }
+}
+```
+
+**Using uvx:**
 ```json
 {
   "mcpServers": {
@@ -88,12 +120,26 @@ Create a `.cursor/mcp.json` file in your project root:
 }
 ```
 
-The Cursor doesn't accept the `env` field, so you need to use the `--read-token` flag instead.
+Note: Cursor doesn't accept the `env` field, so you need to use the `--read-token` flag instead.
 
 ### Configure for Claude Desktop
 
 Add to your Claude settings:
 
+**Using Docker:**
+```json
+{
+  "command": "docker",
+  "args": [
+    "run", "-i", "--rm",
+    "-e", "DOCKER_CONTAINER=true",
+    "-e", "LOGFIRE_READ_TOKEN=YOUR_TOKEN",
+    "mcp/logfire:latest"
+  ]
+}
+```
+
+**Using uvx:**
 ```json
 {
   "command": ["uvx"],
@@ -109,6 +155,27 @@ Add to your Claude settings:
 
 Add to your Cline settings in `cline_mcp_settings.json`:
 
+**Using Docker:**
+```json
+{
+  "mcpServers": {
+    "logfire": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm",
+        "-e", "DOCKER_CONTAINER=true"
+      ],
+      "env": {
+        "LOGFIRE_READ_TOKEN": "YOUR_TOKEN"
+      },
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
+```
+
+**Using uvx:**
 ```json
 {
   "mcpServers": {
