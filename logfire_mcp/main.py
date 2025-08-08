@@ -1,5 +1,4 @@
 import re
-import sys
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from datetime import UTC, datetime, timedelta
@@ -97,7 +96,6 @@ def app_factory(logfire_read_token: str, logfire_base_url: str | None = None) ->
     @asynccontextmanager
     async def lifespan(server: FastMCP) -> AsyncIterator[MCPState]:
         # print to stderr so we this message doesn't get read by the MCP client
-        print('starting Logfire MCP server', file=sys.stderr)
         headers = {'User-Agent': f'logfire-mcp/{__version__}'}
         async with AsyncLogfireQueryClient(logfire_read_token, headers=headers, base_url=logfire_base_url) as client:
             yield MCPState(logfire_client=client)
