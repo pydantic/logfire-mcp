@@ -25,7 +25,12 @@ traces, and make use of the results of arbitrary SQL queries executed using the 
 * `get_logfire_records_schema` - Get the OpenTelemetry schema to help with custom queries
   * No required arguments
 
+* `logfire_link` - Get a link to the trace in Pydantic Logfire
+  * Required arguments:
+    * `trace_id` (string): The trace ID to link to
+
 ## Setup
+
 ### Install `uv`
 
 The first thing to do is make sure `uv` is installed, as `uv` is used to run the MCP server.
@@ -71,6 +76,21 @@ uvx logfire-mcp@latest --read-token=YOUR_READ_TOKEN
     NOT_** need to manually run the server yourself. The next section will show you how to configure these clients to make
     use of the Pydantic Logfire MCP server.
 
+### Base URL
+
+If you are running Logfire in a self hosted environment, you need to specify the base URL.
+This can be done using the `LOGFIRE_BASE_URL` environment variable:
+
+```bash
+LOGFIRE_BASE_URL=https://logfire.my-company.com uvx logfire-mcp@latest --read-token=YOUR_READ_TOKEN
+```
+
+You can also use the `--base-url` argument:
+
+```bash
+uvx logfire-mcp@latest --base-url=https://logfire.my-company.com --read-token=YOUR_READ_TOKEN
+```
+
 ## Configuration with well-known MCP clients
 
 ### Configure for Cursor
@@ -89,6 +109,14 @@ Create a `.cursor/mcp.json` file in your project root:
 ```
 
 The Cursor doesn't accept the `env` field, so you need to use the `--read-token` flag instead.
+
+### Configure for Claude code
+
+Run the following command:
+
+```bash
+claude mcp add logfire -e LOGFIRE_READ_TOKEN=YOUR_TOKEN -- uvx logfire-mcp@latest
+```
 
 ### Configure for Claude Desktop
 
@@ -164,14 +192,6 @@ Create a `.zed/settings.json` file in your project's root directory:
     }
   }
 }
-```
-
-### Configure for Claude code
-
-Run the following command
-
-```bash
-claude mcp add logfire -- uvx logfire-mcp@latest --read-token=YOUR_TOKEN
 ```
 
 ## Example Interactions
