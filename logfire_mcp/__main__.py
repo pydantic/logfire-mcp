@@ -60,15 +60,16 @@ def get_read_token(args: argparse.Namespace) -> tuple[str | None, str]:
         return dotenv_values().get('LOGFIRE_READ_TOKEN'), 'dotenv file'
 
 
-async def test(logfire_read_token: str, logfire_base_url: str, source: str):
+async def test(logfire_read_token: str, logfire_base_url: str | None, source: str):
     print('testing Logfire MCP server:\n')
     print(f'logfire_read_token: `{logfire_read_token[:12]}...{logfire_read_token[-5:]}` from {source}\n')
-    print(f'logfire_base_url: `{logfire_base_url}`')
 
-    server_params = StdioServerParameters(
-        command=sys.executable,
-        args=['-m', 'logfire_mcp', '--read-token', logfire_read_token, '--base-url', logfire_base_url],
-    )
+    args = ['-m', 'logfire_mcp', '--read-token', logfire_read_token]
+    if logfire_base_url:
+        print(f'logfire_base_url: `{logfire_base_url}`')
+        args += ['--base-url', logfire_base_url]
+
+    server_params = StdioServerParameters(command=sys.executable, args=args)
     async with stdio_client(server_params) as (read, write):
         async with ClientSession(read, write) as session:
             await session.initialize()
