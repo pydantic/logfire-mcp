@@ -21,7 +21,7 @@ DAY = 24 * HOUR
 __version__ = version('logfire-mcp')
 
 
-ValidatedAge = Annotated[int, Field(ge=0, le=7 * HOUR * DAY), WithJsonSchema({'type': 'integer'})]
+ValidatedAge = Annotated[int, Field(ge=0, le=7 * DAY), WithJsonSchema({'type': 'integer'})]
 """We don't want to add exclusiveMaximum on the schema because it fails with some models."""
 
 
