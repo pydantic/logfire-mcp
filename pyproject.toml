@@ -42,6 +42,7 @@ Issues = "https://github.com/pydantic/logfire-mcp/issues"
 
 [dependency-groups]
 dev = [
+    "devtools>=0.12.2",
     "inline-snapshot[black]>=0.24.0",
     "pyright>=1.1.403",
     "pytest-recording>=0.13.4",
