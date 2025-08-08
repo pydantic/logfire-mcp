@@ -19,6 +19,12 @@ def main():
         required=False,
         help='Pydantic Logfire read token. Can also be set via LOGFIRE_READ_TOKEN environment variable.',
     )
+    parser.add_argument(
+        '--base-url',
+        type=str,
+        required=False,
+        help='Pydantic Logfire base URL. Can also be set via LOGFIRE_BASE_URL environment variable.',
+    )
     parser.add_argument('--version', action='store_true', help='Show version and exit')
     args = parser.parse_args()
     if args.version:
@@ -34,7 +40,9 @@ def main():
             'or LOGFIRE_READ_TOKEN environment variable'
         )
 
-    app = app_factory(logfire_read_token)
+    logfire_base_url = args.base_url or os.getenv('LOGFIRE_BASE_URL')
+
+    app = app_factory(logfire_read_token, logfire_base_url)
     app.run(transport='stdio')
 
 

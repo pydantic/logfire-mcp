@@ -16,9 +16,7 @@ def anyio_backend():
 
 @pytest.fixture
 def vcr_config():
-    return {
-        'filter_headers': [('authorization', None)],
-    }
+    return {'filter_headers': [('authorization', None)]}
 
 
 @pytest.fixture
