@@ -3,7 +3,7 @@ import asyncio
 import os
 import sys
 
-from dotenv import dotenv_values
+from dotenv import dotenv_values, find_dotenv
 from mcp import ClientSession, StdioServerParameters, stdio_client
 from mcp.types import TextContent
 
@@ -94,7 +94,7 @@ def get_read_token(args: argparse.Namespace) -> tuple[str | None, str]:
     elif token := os.getenv('LOGFIRE_READ_TOKEN'):
         return token, 'environment variable'
     else:
-        return dotenv_values().get('LOGFIRE_READ_TOKEN'), 'dotenv file'
+        return dotenv_values(dotenv_path=find_dotenv(usecwd=True)).get('LOGFIRE_READ_TOKEN'), 'dotenv file'
 
 
 if __name__ == '__main__':
