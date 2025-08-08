@@ -28,8 +28,8 @@ def main():
         required=False,
         help='Pydantic Logfire base URL. Can also be set via LOGFIRE_BASE_URL environment variable.',
     )
-    parser.add_argument('--version', action='store_true', help='Show version and exit')
     parser.add_argument('--test', action='store_true', help='Test the MCP server and exit')
+    parser.add_argument('--version', action='store_true', help='Show version and exit')
     args = parser.parse_args()
     if args.version:
         print(name_version)
@@ -49,15 +49,6 @@ def main():
     else:
         app = app_factory(logfire_read_token, logfire_base_url)
         app.run(transport='stdio')
-
-
-def get_read_token(args: argparse.Namespace) -> tuple[str | None, str]:
-    if args.read_token:
-        return args.read_token, 'cli argument'
-    elif token := os.getenv('LOGFIRE_READ_TOKEN'):
-        return token, 'environment variable'
-    else:
-        return dotenv_values().get('LOGFIRE_READ_TOKEN'), 'dotenv file'
 
 
 async def test(logfire_read_token: str, logfire_base_url: str | None, source: str):
@@ -95,6 +86,15 @@ async def test(logfire_read_token: str, logfire_base_url: str | None, source: st
                 else:
                     first_line = content.text.strip().split('\n', 1)[0]
                     print(f'> {first_line}... ({len(content.text) - len(first_line)} more characters)\n')
+
+
+def get_read_token(args: argparse.Namespace) -> tuple[str | None, str]:
+    if args.read_token:
+        return args.read_token, 'CLI argument'
+    elif token := os.getenv('LOGFIRE_READ_TOKEN'):
+        return token, 'environment variable'
+    else:
+        return dotenv_values().get('LOGFIRE_READ_TOKEN'), 'dotenv file'
 
 
 if __name__ == '__main__':
