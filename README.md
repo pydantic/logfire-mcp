@@ -7,6 +7,8 @@ metrics you've sent to Pydantic Logfire.
   <img width="380" height="200" src="https://glama.ai/mcp/servers/@pydantic/logfire-mcp/badge" alt="Pydantic Logfire Server MCP server" />
 </a>
 
+[![Trust Score](https://archestra.ai/mcp-catalog/api/badge/quality/pydantic/logfire-mcp)](https://archestra.ai/mcp-catalog/pydantic__logfire-mcp)
+
 This MCP server enables LLMs to retrieve your application's telemetry data, analyze distributed
 traces, and make use of the results of arbitrary SQL queries executed using the Pydantic Logfire APIs.
 
