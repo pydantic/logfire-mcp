@@ -19,18 +19,23 @@ DAY = 24 * HOUR
 
 __version__ = version('logfire-mcp')
 
+Age = Annotated[
+    int,
+    Field(
+        ge=0,
+        le=7 * DAY,
+        description='Number of minutes to look back, e.g. 30 for last 30 minutes. Maximum allowed value is 7 days.',
+    ),
+    WithJsonSchema({'type': 'integer'}),
+]
 
-ValidatedAge = Annotated[int, Field(ge=0, le=7 * DAY), WithJsonSchema({'type': 'integer'})]
-"""We don't want to add exclusiveMaximum on the schema because it fails with some models."""
 
-
-async def find_exceptions_in_file(ctx: Context[ServerSession, MCPState], filepath: str, age: ValidatedAge) -> list[Any]:
-    """Get the details about the 10 most recent exceptions on the file.
-
-    Args:
-        filepath: The path to the file to find exceptions in.
-        age: Number of minutes to look back, e.g. 30 for last 30 minutes. Maximum allowed value is 7 days.
-    """
+async def find_exceptions_in_file(
+    ctx: Context[ServerSession, MCPState],
+    filepath: Annotated[str, Field(description='The path to the file to find exceptions in.')],
+    age: Age,
+) -> list[Any]:
+    """Get the details about the 10 most recent exceptions on the file."""
     logfire_client = ctx.request_context.lifespan_context.logfire_client
     min_timestamp = datetime.now(UTC) - timedelta(minutes=age)
     result = await logfire_client.query_json_rows(
@@ -52,14 +57,14 @@ async def find_exceptions_in_file(ctx: Context[ServerSession, MCPState], filepat
     return result['rows']
 
 
-async def arbitrary_query(ctx: Context[ServerSession, MCPState], query: str, age: ValidatedAge) -> list[Any]:
+async def arbitrary_query(
+    ctx: Context[ServerSession, MCPState],
+    query: Annotated[str, Field(description='The query to run, as a SQL string.')],
+    age: Age,
+) -> list[Any]:
     """Run an arbitrary query on the Pydantic Logfire database.
 
     The SQL reference is available via the `sql_reference` tool.
-
-    Args:
-        query: The query to run, as a SQL string.
-        age: Number of minutes to look back, e.g. 30 for last 30 minutes. Maximum allowed value is 7 days.
     """
     logfire_client = ctx.request_context.lifespan_context.logfire_client
     min_timestamp = datetime.now(UTC) - timedelta(minutes=age)
@@ -74,12 +79,11 @@ async def get_logfire_records_schema(ctx: Context[ServerSession, MCPState]) -> s
     return build_schema_description(cast(list[SchemaRow], result['rows']))
 
 
-async def logfire_link(ctx: Context[ServerSession, MCPState], trace_id: str) -> str:
-    """Creates a link to help the user to view the trace in the Logfire UI.
-
-    Args:
-        trace_id: The trace ID to link to.
-    """
+async def logfire_link(
+    ctx: Context[ServerSession, MCPState],
+    trace_id: Annotated[str, Field(description='The trace ID to link to.')],
+) -> str:
+    """Creates a link to help the user to view the trace in the Logfire UI."""
     logfire_client = ctx.request_context.lifespan_context.logfire_client
     response = await logfire_client.client.get('/api/read-token-info')
     read_token_info = cast(ReadTokenInfo, response.json())
@@ -106,9 +110,6 @@ def app_factory(logfire_read_token: str, logfire_base_url: str | None = None) ->
     mcp.tool()(sql_reference)
     mcp.tool()(get_logfire_records_schema)
     mcp.tool()(logfire_link)
-    # add SQL reference as a resource as well as a tool
-    # not all clients support resources but those that do should benefit from this
-    mcp.resource('config://sql_reference')(sql_reference)
 
     return mcp
 
