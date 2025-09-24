@@ -9,15 +9,15 @@ interactions:
       connection:
       - keep-alive
       host:
-      - logfire-eu.pydantic.info
+      - logfire-us.pydantic.dev
       user-agent:
       - logfire-mcp/0.3.2.dev4+ae94fe7
     method: GET
-    uri: https://logfire-eu.pydantic.info/v1/schemas
+    uri: https://logfire-us.pydantic.dev/v1/schemas
   response:
     body:
       string: !!binary |
-        H4sIAHwd1GgC/+2YbW/bIBDHv0rk1/0Eeddu1hapbao206ZVFSL4YtNgYHBEzaJ89+GkbZYHLw7Q
+        H4sIAI0k1GgC/+2YbW/bIBDHv0rk1/0Eeddu1hapbao206ZVFSL4YtNgYHBEzaJ89+GkbZYHLw7Q
         SdP6ztjm57vjuOPvRYZ0LMBm/ftFJmkNWT8zwJQpbHaWFWCZ4Rq5kv6+v2FZBTXN+ouMIho+dthM
         XWQFRUpwrpvpo/zbyL8qnRANOuujcbDHWp79hiCPVkmygQfhmAGKUBCKe4jBVX43Or+66X0djD73
         mmHv+/A638JOqLAHuQWd7wI/no+6TgYt1LwGiQTkjBslm+tgHwtn6Hq4Y9Dwy8Vl3ru5zT8M7gbD
@@ -33,7 +33,7 @@ interactions:
         SzcnOYbmxHL5sPwF6X85hKIZAAA=
     headers:
       CF-RAY:
-      - 9843afe8deed0920-LAX
+      - 9843dc15cb69cba0-LAX
       Connection:
       - keep-alive
       Content-Encoding:
@@ -43,21 +43,19 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Wed, 24 Sep 2025 16:34:04 GMT
+      - Wed, 24 Sep 2025 17:04:13 GMT
       Nel:
       - '{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}'
       Report-To:
-      - '{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=PS8NUGl%2FdqM1bb%2Fs%2F9jB7H%2BcP7DDNtkHOSjCMEPNIxwpR6iwwHRM0vzP3CH2bN%2FR4ct1wlSk0%2Bk24%2BAxccsuoAvbw7TzHfLQraUsrwqorhLJM3kVn0Y6Kw%3D%3D"}]}'
+      - '{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=PzOyGdfLWRnle1nd8OxmfFcCYNg7p4jnLwzUghIyvIkSPowyFzWQt1xCSwl77Pi7c5k4tJOTJnp0aXIaT7c2AdQYy4ZfGJxsI5IUFBvuNAqb%2F1gYuFo%3D"}]}'
       Server:
       - cloudflare
       access-control-expose-headers:
       - traceresponse
-      alt-svc:
-      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
       traceresponse:
-      - 00-01997c932ddb32c23d581bbb9fef5fbd-adaea6463d93646a-01
+      - 00-01997caec9c993425dabd0264fe732ed-2c46a3fa819c4259-01
       vary:
       - Accept-Encoding
       via:
