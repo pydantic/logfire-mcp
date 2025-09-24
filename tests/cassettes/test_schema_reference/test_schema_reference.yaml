@@ -1,0 +1,68 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - logfire-us.pydantic.dev
+      user-agent:
+      - logfire-mcp/0.3.2.dev4+ae94fe7
+    method: GET
+    uri: https://logfire-us.pydantic.dev/v1/schemas
+  response:
+    body:
+      string: !!binary |
+        H4sIAI0k1GgC/+2YbW/bIBDHv0rk1/0Eeddu1hapbao206ZVFSL4YtNgYHBEzaJ89+GkbZYHLw7Q
+        SdP6ztjm57vjuOPvRYZ0LMBm/ftFJmkNWT8zwJQpbHaWFWCZ4Rq5kv6+v2FZBTXN+ouMIho+dthM
+        XWQFRUpwrpvpo/zbyL8qnRANOuujcbDHWp79hiCPVkmygQfhmAGKUBCKe4jBVX43Or+66X0djD73
+        mmHv+/A638JOqLAHuQWd7wI/no+6TgYt1LwGiQTkjBslm+tgHwtn6Hq4Y9Dwy8Vl3ru5zT8M7gbD
+        604wkAVBXoNFWuu0MYMnBqsx8XhLSwj2eEPyZrIpGspSwNYzAzEVovaOYaWKOIYBq5W00PiGzhKm
+        ij2rBtej/FN+ewJU+S0VbBe35DVKu5CL4fAyP++WXFMujwenNX8EzEB0iUQ7QZVkrIp5cCC6Jm6r
+        BQpBEO+HxPASuWIILqeRCJ9oyhkGJEHZXgEtUzo1bd1+4jkzMPZA9p6Iat+RQaDYOqipaZqI1VQS
+        Hl52tFHMW0L0PuOUQuMxj8CwiyWt+8OCmXGfklz6EMnmItytF1anFDpqUUPxgY5oNC+k2FTsutzt
+        LjWAyKggNfhWBwWk5cHacf/QKT5+g4FvxGZObDElgsrSxWyybVxUPdpGxebB6tgTlQjOCDLxrwWb
+        0AA0xSoK8MOBCW3Jy+XZq0RpIsvZMYlSlgZKuj7vQa2VoYLjPIFeeZc8f0/ywJNfOkGNjSBoUnGL
+        qjS0JnKVEjMgY8emgL7DuwMntOdm2LEMdfkCUZOJBYzputuf0cryt3Xk8BeSO2IZFZAO9xOMWpua
+        mImVP0ZXShRJ1PcGnnD9NtDoAGxQPhSCM45eTzlZ2GPen2xqTZ8SR7TmMjHRujoJ0cvrWkmFSnIW
+        I6/XDZBsPQgWuitU3CHxGdLpt8qfFfO7VP035dz6rzHE/lJsVUK+SVBDZlQ4SLIT3+VnB04C6fe/
+        SzcnOYbmxHL5sPwF6X85hKIZAAA=
+    headers:
+      CF-RAY:
+      - 9843dc15cb69cba0-LAX
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '761'
+      Content-Type:
+      - application/json
+      Date:
+      - Wed, 24 Sep 2025 17:04:13 GMT
+      Nel:
+      - '{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}'
+      Report-To:
+      - '{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=PzOyGdfLWRnle1nd8OxmfFcCYNg7p4jnLwzUghIyvIkSPowyFzWQt1xCSwl77Pi7c5k4tJOTJnp0aXIaT7c2AdQYy4ZfGJxsI5IUFBvuNAqb%2F1gYuFo%3D"}]}'
+      Server:
+      - cloudflare
+      access-control-expose-headers:
+      - traceresponse
+      cf-cache-status:
+      - DYNAMIC
+      traceresponse:
+      - 00-01997caec9c993425dabd0264fe732ed-2c46a3fa819c4259-01
+      vary:
+      - Accept-Encoding
+      via:
+      - 1.1 google
+      x-api-version:
+      - 54zyD1FXxO9eq0NYG+0f6iMvkItkOgIG55xblSjRFPw=
+    status:
+      code: 200
+      message: OK
+version: 1

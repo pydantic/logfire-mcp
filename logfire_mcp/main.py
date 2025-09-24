@@ -1,18 +1,20 @@
-import re
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
+from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from importlib.metadata import version
-from textwrap import indent
-from typing import Annotated, Any, Literal, TypedDict, cast
+from typing import Annotated, Any, TypedDict, cast
 
 from logfire.experimental.query_client import AsyncLogfireQueryClient
 from mcp.server.fastmcp import Context, FastMCP
 from mcp.server.session import ServerSession
 from pydantic import Field, WithJsonSchema
 
-from .sql_reference import sql_reference
-from .state import MCPState
+
+@dataclass
+class MCPState:
+    logfire_client: AsyncLogfireQueryClient
+
 
 HOUR = 60  # minutes
 DAY = 24 * HOUR
@@ -72,11 +74,60 @@ async def arbitrary_query(
     return result['rows']
 
 
-async def get_logfire_records_schema(ctx: Context[ServerSession, MCPState]) -> str:
-    """Get the records schema from Pydantic Logfire."""
+async def schema_reference(ctx: Context[ServerSession, MCPState]) -> str:
+    """The database schema for the Logfire DataFusion database.
+
+    This includes all tables, columns, and their types as well as descriptions.
+    For example:
+
+    ```sql
+    -- The records table contains spans and logs.
+    CREATE TABLE records (
+        message TEXT, -- The message of the record
+        span_name TEXT, -- The name of the span, message is usually templated from this
+        trace_id TEXT, -- The trace ID, identifies a group of spans in a trace
+        exception_type TEXT, -- The type of the exception
+        exception_message TEXT, -- The message of the exception
+        -- other columns...
+    );
+    ```
+    The SQL syntax is similar to Postgres, although the query engine is actually Apache DataFusion.
+
+    To access nested JSON fields e.g. in the `attributes` column use the `->` and `->>` operators.
+    You may need to cast the result of these operators e.g. `(attributes->'cost')::float + 10`.
+
+    You should apply as much filtering as reasonable to reduce the amount of data queried.
+    Filters on `start_timestamp`, `service_name`, `span_name`, `metric_name`, `trace_id` are efficient.
+    """
     logfire_client = ctx.request_context.lifespan_context.logfire_client
-    result = await logfire_client.query_json_rows('SHOW COLUMNS FROM records')
-    return build_schema_description(cast(list[SchemaRow], result['rows']))
+    response = await logfire_client.client.get('/v1/schemas')
+    schema_data = response.json()
+
+    def schema_to_sql(schema_json: dict[str, Any]) -> str:
+        sql_commands: list[str] = []
+        for table in schema_json.get('tables', []):
+            table_name = table['name']
+            columns: list[str] = []
+
+            for col_name, col_info in table['schema'].items():
+                data_type = col_info['data_type']
+                nullable = col_info.get('nullable', True)
+                description = col_info.get('description', '').strip()
+
+                column_def = f'{col_name} {data_type}'
+                if not nullable:
+                    column_def += ' NOT NULL'
+                if description:
+                    column_def += f' -- {description}'
+
+                columns.append(column_def)
+
+            create_table = f'CREATE TABLE {table_name} (\n    ' + ',\n    '.join(columns) + '\n);'
+            sql_commands.append(create_table)
+
+        return '\n\n'.join(sql_commands)
+
+    return schema_to_sql(schema_data)
 
 
 async def logfire_link(
@@ -107,68 +158,10 @@ def app_factory(logfire_read_token: str, logfire_base_url: str | None = None) ->
     mcp = FastMCP('Logfire', lifespan=lifespan)
     mcp.tool()(find_exceptions_in_file)
     mcp.tool()(arbitrary_query)
-    mcp.tool()(sql_reference)
-    mcp.tool()(get_logfire_records_schema)
     mcp.tool()(logfire_link)
+    mcp.tool()(schema_reference)
 
     return mcp
-
-
-class SchemaRow(TypedDict):
-    column_name: str
-    data_type: str
-    is_nullable: Literal['YES', 'NO']
-
-    # These columns are less likely to be useful
-    table_name: str  # could be useful if looking at both records _and_ metrics..
-    table_catalog: str
-    table_schema: str
-
-
-def _remove_dictionary_encoding(data_type: str) -> str:
-    result = re.sub(r'Dictionary\([^,]+, ([^,]+)\)', r'\1', data_type)
-    return result
-
-
-def build_schema_description(rows: list[SchemaRow]) -> str:
-    normal_column_lines: list[str] = []
-    attribute_lines: list[str] = []
-    resource_attribute_lines: list[str] = []
-
-    for row in rows:
-        modifier = ' IS NOT NULL' if row['is_nullable'] == 'NO' else ''
-        data_type = _remove_dictionary_encoding(row['data_type'])
-        if row['column_name'].startswith('_lf_attributes'):
-            name = row['column_name'][len('_lf_attributes/') :]
-            attribute_lines.append(f"attributes->>'{name}' (type: {data_type}{modifier})")
-        elif row['column_name'].startswith('_lf_otel_resource_attributes'):
-            name = row['column_name'][len('_lf_otel_resource_attributes/') :]
-            resource_attribute_lines.append(f"otel_resource_attributes->>'{name}' (type: {data_type}{modifier})")
-        else:
-            name = row['column_name']
-            normal_column_lines.append(f'{name} {data_type}{modifier}')
-
-    normal_columns = ',\n'.join(normal_column_lines)
-    attributes = '\n'.join([f'* {line}' for line in attribute_lines])
-    resource_attributes = '\n'.join([f'* {line}' for line in resource_attribute_lines])
-
-    schema_description = f"""\
-The following data was obtained by running the query "SHOW COLUMNS FROM records" in the Pydantic Logfire datafusion database.
-We present it here as pseudo-postgres-DDL, but this is a datafusion table.
-Note that Pydantic Logfire has support for special JSON querying so that you can use the `->` and `->>` operators like in Postgres, despite being a DataFusion database.
-
-CREATE TABLE records AS (
-{indent(normal_columns, '    ')}
-)
-
-Note that the `attributes` column can be interacted with like postgres JSONB.
-It can have arbitrary user-specified fields, but the following fields are semantic conventions and have the specified types:
-{attributes}
-
-And for `otel_resource_attributes`:
-{resource_attributes}
-"""
-    return schema_description
 
 
 class ReadTokenInfo(TypedDict):
