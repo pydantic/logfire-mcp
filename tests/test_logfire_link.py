@@ -11,6 +11,6 @@ async def test_logfire_link(session: ClientSession) -> None:
     assert result.content == [
         TextContent(
             type='text',
-            text='https://logfire-us.pydantic.dev/kludex/logfire-mcp?q=trace_id%3D%27019837e6ba8ab0ede383b398b6706f28%27',
+            text='https://logfire-us.pydantic.dev/logfire/gateway?q=trace_id%3D%27019837e6ba8ab0ede383b398b6706f28%27',
         )
     ]

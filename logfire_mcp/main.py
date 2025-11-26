@@ -136,7 +136,7 @@ async def logfire_link(
 ) -> str:
     """Creates a link to help the user to view the trace in the Logfire UI."""
     logfire_client = ctx.request_context.lifespan_context.logfire_client
-    response = await logfire_client.client.get('/api/read-token-info')
+    response = await logfire_client.client.get('/v1/read-token-info')
     read_token_info = cast(ReadTokenInfo, response.json())
     organization_name = read_token_info['organization_name']
     project_name = read_token_info['project_name']
