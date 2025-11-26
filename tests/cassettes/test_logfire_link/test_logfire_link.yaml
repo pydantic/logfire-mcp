@@ -11,19 +11,19 @@ interactions:
       host:
       - logfire-us.pydantic.dev
       user-agent:
-      - logfire-mcp/0.0.1
+      - logfire-mcp/0.3.2.dev7+6fc4700
     method: GET
-    uri: https://logfire-us.pydantic.dev/api/read-token-info
+    uri: https://logfire-us.pydantic.dev/v1/read-token-info
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAAA1yNSQrDMAwA/6JzBN4S2/lMsS0puFkcQgqlpX/vJYfS68DMvOFsM2+3SjBCCr0u
-        YgkDeYuOs2D2VqPW3gWT+hy5hw7aMaWtvtJZ2yUaoiKKBxRKCp0vgoGiYLAmqaDUECJBB/vR7lzO
-        a9ZrTqwMRi2CTgbBmKNHUkNmU4JT0fzPtrQyjDAvD+LnT/DiS5ukHoxr2eHzBQAA//8DAGdhjOza
-        AAAA
+        H4sIAAAAAAAA/12NQQ7CIBBF78LaSYBSKF7GDDA0aIWmxRg13t1WuzBdTeb/vP9erJYL5VMK7MiM
+        NI3TFEByoUAJ4aEzpIEikgncK4rEDqxMPeb0xJrKBgoRsO3QQRO6CAqlB6t0C8EuR3GH5O0enG9u
+        9lMav884YF528prXJVw141TO5OvPELS23ooA3MoGFLkItnUI2EnlnZVSGr43ZLzSgg6lj2n6X9yK
+        Hivd8cHeH0L28pQFAQAA
     headers:
       CF-RAY:
-      - 9643f8370dddf5dc-AMS
+      - 9a49b1affcbccf8c-MAD
       Connection:
       - keep-alive
       Content-Encoding:
@@ -31,11 +31,11 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Thu, 24 Jul 2025 14:04:56 GMT
-      NEL:
-      - '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+      - Wed, 26 Nov 2025 13:22:20 GMT
+      Nel:
+      - '{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}'
       Report-To:
-      - '{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=VUHjqy%2BTrdTOsaOXBzrBG9FuRkXpOwjRA%2FxWrdx0nSl%2BXScKANX0WkbEpjBsbCTgwWOd%2Frk0%2FjuqV3cex4dPjNbjFciTk%2BIEkmBhrwxOEBIu3pPQdTf8ia7Htc8EMWlnpT0SPCfxfM3v"}],"group":"cf-nel","max_age":604800}'
+      - '{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=ohqPeR1qOhHTfrK8Ol0t2yNds%2BiXMlvqFQ44Wr9xA7T1HvYcxqGf1iWAnHbgXaE5sjgXlL8KG4zqobVVhk6ukX6288UTZgJmNNJ8nui%2BqjFKcGG%2B"}]}'
       Server:
       - cloudflare
       Transfer-Encoding:
@@ -44,14 +44,12 @@ interactions:
       - traceresponse
       cf-cache-status:
       - DYNAMIC
-      server-timing:
-      - cfL4;desc="?proto=TCP&rtt=12945&min_rtt=12595&rtt_var=4973&sent=4&recv=6&lost=0&retrans=0&sent_bytes=2843&recv_bytes=859&delivery_rate=229932&cwnd=252&unsent_bytes=0&cid=f1a8bab48a8921f3&ts=186&x=0"
       traceresponse:
-      - 00-01983cc05eb814b18b2b449cd2e76a6d-8432e93ab1a5c2bc-01
+      - 00-019ac0544a2bb64ebcb217bff0a2f286-21e29cc6573172cd-01
       via:
       - 1.1 google
       x-api-version:
-      - 8B3/58p72Z+yU8ZrVkBW+6WjdphoLsyQ1sXK9c1305Y=
+      - aolOI3LqYyHtai+Ejr/G5PpjjvGOAvPaQSoxeX84qXU=
     status:
       code: 200
       message: OK
