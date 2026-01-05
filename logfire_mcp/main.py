@@ -25,8 +25,8 @@ Age = Annotated[
     int,
     Field(
         ge=0,
-        le=7 * DAY,
-        description='Number of minutes to look back, e.g. 30 for last 30 minutes. Maximum allowed value is 7 days.',
+        le=7 * 30 * DAY,
+        description='Number of minutes to look back, e.g. 30 for last 30 minutes. Maximum allowed value is 30 days.',
     ),
     WithJsonSchema({'type': 'integer'}),
 ]
