@@ -75,17 +75,15 @@ async def test(logfire_read_token: str, logfire_base_url: str | None, source: st
             for resource in list_resources.resources:
                 print(f'  - {resource.name}')
 
-            for tool in 'sql_reference', 'get_logfire_records_schema':
-                print(f'\ncalling `{tool}`:')
-                output = await session.call_tool(tool)
-                # debug(output)
-                content = output.content[0]
-                assert isinstance(content, TextContent), f'Expected TextContent, got {type(content)}'
-                if len(content.text) < 200:
-                    print(f'> {content.text.strip()}')
-                else:
-                    first_line = content.text.strip().split('\n', 1)[0]
-                    print(f'> {first_line}... ({len(content.text) - len(first_line)} more characters)\n')
+            print('\ncalling `schema_reference`:')
+            output = await session.call_tool('schema_reference')
+            content = output.content[0]
+            assert isinstance(content, TextContent), f'Expected TextContent, got {type(content)}'
+            if len(content.text) < 200:
+                print(f'> {content.text.strip()}')
+            else:
+                first_line = content.text.strip().split('\n', 1)[0]
+                print(f'> {first_line}... ({len(content.text) - len(first_line)} more characters)\n')
 
 
 def get_read_token(args: argparse.Namespace) -> tuple[str | None, str]:
