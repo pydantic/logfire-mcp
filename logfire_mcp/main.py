@@ -66,7 +66,7 @@ async def arbitrary_query(
 ) -> list[Any]:
     """Run an arbitrary query on the Pydantic Logfire database.
 
-    The SQL reference is available via the `sql_reference` tool.
+    The SQL reference is available via the `schema_reference` tool.
     """
     logfire_client = ctx.request_context.lifespan_context.logfire_client
     min_timestamp = datetime.now(UTC) - timedelta(minutes=age)
