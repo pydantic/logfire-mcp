@@ -1,0 +1,26 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - logfire-us.pydantic.dev
+      user-agent:
+      - logfire-mcp/0.3.2
+    method: GET
+    uri: https://logfire-us.pydantic.dev/v1/read-token-info
+  response:
+    body:
+      string: '{"detail":"Invalid read token"}'
+    headers:
+      Content-Type:
+      - application/json
+    status:
+      code: 401
+      message: Unauthorized
+version: 1
