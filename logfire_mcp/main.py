@@ -147,12 +147,23 @@ async def logfire_link(
     return str(url)
 
 
+class InvalidReadTokenError(Exception):
+    """Raised when the Logfire read token is invalid."""
+
+
 def app_factory(logfire_read_token: str, logfire_base_url: str | None = None) -> FastMCP:
     @asynccontextmanager
     async def lifespan(server: FastMCP) -> AsyncIterator[MCPState]:
-        # print to stderr so we this message doesn't get read by the MCP client
         headers = {'User-Agent': f'logfire-mcp/{__version__}'}
         async with AsyncLogfireQueryClient(logfire_read_token, headers=headers, base_url=logfire_base_url) as client:
+            # Validate the token by making a request to /v1/read-token-info
+            response = await client.client.get('/v1/read-token-info')
+            if response.status_code == 401:
+                raise InvalidReadTokenError(
+                    'Invalid Logfire read token. '
+                    'Please check your token at https://logfire.pydantic.dev/ and update your configuration.'
+                )
+            response.raise_for_status()
             yield MCPState(logfire_client=client)
 
     mcp = FastMCP('Logfire', lifespan=lifespan)
