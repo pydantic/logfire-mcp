@@ -1,5 +1,8 @@
 # Pydantic Logfire MCP Server
 
+This repository contains a Model Context Protocol (MCP) server with tools that can access the OpenTelemetry traces and
+metrics you've sent to Pydantic Logfire.
+
 ## Remote MCP Server (Recommended)
 
 Pydantic Logfire provides a hosted remote MCP server that you can use instead of running this package locally.
@@ -9,7 +12,7 @@ To use the remote MCP server, add the following configuration to your MCP client
 
 **Choose the endpoint that matches your Logfire data region:**
 
-For **US region** (`logfire.pydantic.dev`):
+For **US region** (`logfire-us.pydantic.dev`):
 ```json
 {
   "mcpServers": {
@@ -37,11 +40,19 @@ For **EU region** (`logfire-eu.pydantic.dev`):
 > The remote MCP server handles authentication automatically through your browser. When you first connect,
 > you'll be prompted to authenticate with your Pydantic Logfire account.
 
+> [!NOTE]
+> If you are running a self-hosted Logfire instance, you should use the [Running Locally](#running-locally) section below
+> to configure the MCP server with your custom base URL.
+
 ---
 
-## Running Locally
+## Running Locally (Deprecated)
 
-If you prefer to run the MCP server locally (for example, for offline use or custom configurations),
+> [!WARNING]
+> Running the MCP server locally is deprecated. Please use the [Remote MCP Server](#remote-mcp-server-recommended) instead.
+> The local server will continue to work, but we recommend migrating to the remote server for a better experience.
+
+If you prefer to run the MCP server locally (for example, for self-hosted Logfire or custom configurations),
 you can use this package instead.
 
 <a href="https://glama.ai/mcp/servers/@pydantic/logfire-mcp">
