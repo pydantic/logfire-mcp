@@ -52,8 +52,7 @@ For **EU region** (`logfire-eu.pydantic.dev`):
 > Running the MCP server locally is deprecated. Please use the [Remote MCP Server](#remote-mcp-server-recommended) instead.
 > The local server will continue to work, but we recommend migrating to the remote server for a better experience.
 
-If you prefer to run the MCP server locally (for example, for self-hosted Logfire or custom configurations),
-you can use this package instead.
+If you prefer to run the MCP server locally, you can use this package instead.
 
 <a href="https://glama.ai/mcp/servers/@pydantic/logfire-mcp">
   <img width="380" height="200" src="https://glama.ai/mcp/servers/@pydantic/logfire-mcp/badge" alt="Pydantic Logfire Server MCP server" />
