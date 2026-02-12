@@ -8,32 +8,26 @@ metrics you've sent to Pydantic Logfire.
 Pydantic Logfire provides a hosted remote MCP server that you can use instead of running this package locally.
 This is the easiest way to get started with the Logfire MCP server.
 
-To use the remote MCP server, add the following configuration to your MCP client.
+To use the remote MCP server, add the following configuration to your MCP client:
 
-**Choose the endpoint that matches your Logfire data region:**
-
-For **US region** (`logfire-us.pydantic.dev`):
 ```json
 {
   "mcpServers": {
     "logfire": {
       "type": "http",
-      "url": "https://logfire-us.pydantic.dev/mcp"
+      "url": "${LOGFIRE_MCP_URL:-https://logfire-us.pydantic.dev/mcp}"
     }
   }
 }
 ```
 
-For **EU region** (`logfire-eu.pydantic.dev`):
-```json
-{
-  "mcpServers": {
-    "logfire": {
-      "type": "http",
-      "url": "https://logfire-eu.pydantic.dev/mcp"
-    }
-  }
-}
+Set the `LOGFIRE_MCP_URL` environment variable to the URL of your Logfire MCP server.
+The default value is `https://logfire-us.pydantic.dev/mcp` (US region), as this is the most commonly used region.
+
+If your data is stored in the **EU region**, set the environment variable to:
+
+```
+export LOGFIRE_MCP_URL=https://logfire-eu.pydantic.dev/mcp
 ```
 
 > [!NOTE]
@@ -41,8 +35,8 @@ For **EU region** (`logfire-eu.pydantic.dev`):
 > you'll be prompted to authenticate with your Pydantic Logfire account.
 
 > [!NOTE]
-> If you are running a self-hosted Logfire instance, you should use the [Running Locally](#running-locally) section below
-> to configure the MCP server with your custom base URL.
+> If you are running a self-hosted Logfire instance, set `LOGFIRE_MCP_URL` to your own Logfire instance URL
+> (e.g., `https://logfire.my-company.com/mcp`), as the remote MCP server is hosted alongside your Logfire deployment.
 
 ---
 
