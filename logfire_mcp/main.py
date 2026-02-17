@@ -7,6 +7,7 @@ from typing import Annotated, Any, TypedDict, cast
 
 from logfire.experimental.query_client import AsyncLogfireQueryClient
 from mcp.server.fastmcp import Context, FastMCP
+from mcp.server.fastmcp.server import logger as mcp_logger
 from mcp.server.session import ServerSession
 from pydantic import Field, WithJsonSchema
 
@@ -150,9 +151,10 @@ async def logfire_link(
 def app_factory(logfire_read_token: str, logfire_base_url: str | None = None) -> FastMCP:
     @asynccontextmanager
     async def lifespan(server: FastMCP) -> AsyncIterator[MCPState]:
-        # print to stderr so we this message doesn't get read by the MCP client
         headers = {'User-Agent': f'logfire-mcp/{__version__}'}
         async with AsyncLogfireQueryClient(logfire_read_token, headers=headers, base_url=logfire_base_url) as client:
+            logfire_info = await client.info()
+            mcp_logger.info('Starting Logfire MCP server, connection: %s', logfire_info)
             yield MCPState(logfire_client=client)
 
     mcp = FastMCP('Logfire', lifespan=lifespan)
