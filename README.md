@@ -70,7 +70,7 @@ Create a `.cursor/mcp.json` file in your project root:
 Run the following command:
 
 ```bash
-claude mcp add logfire --type http --url https://logfire-us.pydantic.dev/mcp
+claude mcp add logfire --transport http https://logfire-us.pydantic.dev/mcp
 ```
 
 ### Configure for Claude Desktop
