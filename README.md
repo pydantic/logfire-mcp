@@ -44,8 +44,7 @@ For **EU region** (`logfire-eu.pydantic.dev`):
 > you'll be prompted to authenticate with your Pydantic Logfire account.
 
 > [!NOTE]
-> If you are running a self-hosted Logfire instance, you should use the [Running Locally](#running-locally) section below
-> to configure the MCP server with your custom base URL.
+> If you want to run logfire-mcp locally, check the [OLD_README.md](OLD_README.md) file.
 
 ## Configuration with well-known MCP clients
 
