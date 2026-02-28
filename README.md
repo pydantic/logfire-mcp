@@ -103,6 +103,32 @@ Add to your Cline settings in `cline_mcp_settings.json`:
 }
 ```
 
+### Configure for GitHub Copilot CLI
+
+Use the Copilot CLI to interactively add the MCP server:
+
+```bash
+/mcp add
+```
+
+Alternatively, create or edit the configuration file `~/.copilot/mcp-config.json` and add:
+
+```json
+{
+  "mcpServers": {
+    "logfire": {
+      "command": "uvx",
+      "args": ["logfire-mcp@latest"],
+      "env": {
+        "LOGFIRE_READ_TOKEN": "YOUR_TOKEN"
+      }
+    }
+  }
+}
+```
+
+For more information, see the [Copilot CLI documentation](https://docs.github.com/en/copilot/concepts/agents/about-copilot-cli).
+
 ### Configure for VS Code
 
 Make sure you [enabled MCP support in VS Code](https://code.visualstudio.com/docs/copilot/chat/mcp-servers#_enable-mcp-support-in-vs-code).
