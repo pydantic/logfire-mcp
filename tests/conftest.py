@@ -6,7 +6,7 @@ from mcp.client.session import ClientSession
 from mcp.server.fastmcp import FastMCP
 from mcp.shared.memory import create_connected_server_and_client_session
 
-from logfire_mcp.__main__ import app_factory
+from logfire_mcp.main import app_factory
 
 
 @pytest.fixture
